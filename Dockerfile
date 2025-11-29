@@ -43,7 +43,7 @@ EXPOSE 3000
 # Set environment variables
 ENV NODE_ENV=production
 ENV PORT=3000
-ENV ORIGIN=http://localhost:3000
+ENV ORIGIN=https://auth.surajpulami.com.np
 
 # Start the application
 CMD ["node", "build"]
