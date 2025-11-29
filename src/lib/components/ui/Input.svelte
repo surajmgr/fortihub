@@ -56,6 +56,6 @@
 	{inputmode}
 	{maxlength}
 	{required}
-	on:input={onchange}
-	on:keydown={onkeydown}
+	oninput={onchange}
+	{onkeydown}
 />

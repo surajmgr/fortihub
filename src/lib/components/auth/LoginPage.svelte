@@ -93,12 +93,12 @@
 		if (promptSetPassword && !hasPassword) {
 			authStep = 'set-password';
 		} else {
-			goto(callbackUrl);
+			window.location.href = getAuthCallbackURL(callbackUrl);
 		}
 	}
 
 	function handleSetPasswordSuccess() {
-		goto(callbackUrl);
+		window.location.href = getAuthCallbackURL(callbackUrl);
 	}
 
 	function handleBackToEmail() {
@@ -207,7 +207,10 @@
 				{/if}
 
 				{#if authStep === 'set-password'}
-					<SetPasswordStep onSuccess={handleSetPasswordSuccess} onSkip={() => goto(callbackUrl)} />
+					<SetPasswordStep
+						onSuccess={handleSetPasswordSuccess}
+						onSkip={() => (window.location.href = getAuthCallbackURL(callbackUrl))}
+					/>
 				{/if}
 
 				{#if authStep === 'loading'}

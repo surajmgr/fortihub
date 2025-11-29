@@ -6,6 +6,7 @@
 		disabled?: boolean;
 		class?: string;
 		onclick?: (e: MouseEvent) => void;
+		title?: string;
 		children?: any;
 	}
 
@@ -18,6 +19,7 @@
 		disabled = false,
 		class: className = '',
 		onclick,
+		title,
 		children
 	}: Props = $props();
 
@@ -41,6 +43,6 @@
 	const classes = `${baseClasses} ${variantClasses[variant]} ${sizeClasses[ignoreSize.includes(variant) ? 'none' : size]} ${className}`;
 </script>
 
-<button {type} {disabled} class={classes} {onclick}>
+<button {type} {disabled} class={classes} {onclick} {title}>
 	{@render children?.()}
 </button>

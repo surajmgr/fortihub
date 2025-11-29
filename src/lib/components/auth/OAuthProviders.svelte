@@ -1,73 +1,197 @@
 <script lang="ts">
 	import Button from '$lib/components/ui/Button.svelte';
-	import { Key } from '@lucide/svelte';
+	import {
+		GITHUB_CLIENT_ID,
+		GOOGLE_CLIENT_ID,
+		type SocialProvider,
+		ALLOWED_SOCIAL_PROVIDERS,
+		VERCEL_CLIENT_ID,
+		DISCORD_CLIENT_ID,
+		MICROSOFT_CLIENT_ID,
+		LINKEDIN_CLIENT_ID,
+		FACEBOOK_CLIENT_ID,
+		GITLAB_CLIENT_ID,
+		HUGGINGFACE_CLIENT_ID,
+		NOTION_CLIENT_ID,
+		REDDIT_CLIENT_ID,
+		SLACK_CLIENT_ID,
+		SPOTIFY_CLIENT_ID,
+		TWITTER_CLIENT_ID,
+		TWITCH_CLIENT_ID,
+		OAUTH_TEMPLATES,
+		ENABLE_ANONYMOUS,
+		OAUTH_TEMPLATES
+	} from '$lib/utils/publicConstants';
+	import { GithubIcon, Key } from '@lucide/svelte';
+	import SocialIcons from '../ui/SocialIcons.svelte';
 
 	interface Props {
-		onGoogleClickAction: () => void;
+		onSocialClickAction: (provider: SocialProvider) => void;
 		onPasskeyClickAction: () => void;
 		onAnonymousClickAction: () => void;
 		isLoading?: boolean;
 	}
 
-	let {
-		onGoogleClickAction,
-		onPasskeyClickAction,
-		onAnonymousClickAction,
-		isLoading = false
-	}: Props = $props();
+	let { onSocialClickAction, onPasskeyClickAction, isLoading = false }: Props = $props();
+
+	const params = new URLSearchParams(window.location.search);
+	const templateParam = params.get('template') ?? 'popular';
+	const inclusionParam = params.get('include')?.split(',') ?? [];
+	const disclusionParam = params.get('exclude')?.split(',') ?? [];
+	// Legacy support for 'disable' param
+	const disableParam = params.get('disable')?.split(',') ?? [];
+	const allDisclusions = [...disclusionParam, ...disableParam];
+
+	const allProviderConfigs: {
+		provider: SocialProvider;
+		label: string;
+		clientId: string | undefined | null;
+	}[] = [
+		{
+			provider: 'passkey',
+			label: 'Continue with Passkey',
+			clientId: 'passkey'
+		},
+		{
+			provider: 'anonymous',
+			label: 'Continue as Guest',
+			clientId: ENABLE_ANONYMOUS ? 'anonymous' : undefined
+		},
+		{
+			provider: 'google',
+			label: 'Continue with Google',
+			clientId: GOOGLE_CLIENT_ID
+		},
+		{
+			provider: 'github',
+			label: 'Continue with GitHub',
+			clientId: GITHUB_CLIENT_ID
+		},
+		{
+			provider: 'discord',
+			label: 'Continue with Discord',
+			clientId: DISCORD_CLIENT_ID
+		},
+		{
+			provider: 'microsoft',
+			label: 'Continue with Microsoft',
+			clientId: MICROSOFT_CLIENT_ID
+		},
+		{
+			provider: 'linkedin',
+			label: 'Continue with LinkedIn',
+			clientId: LINKEDIN_CLIENT_ID
+		},
+		{
+			provider: 'facebook',
+			label: 'Continue with Facebook',
+			clientId: FACEBOOK_CLIENT_ID
+		},
+		{
+			provider: 'gitlab',
+			label: 'Continue with GitLab',
+			clientId: GITLAB_CLIENT_ID
+		},
+		{
+			provider: 'huggingface',
+			label: 'Continue with Huggingface',
+			clientId: HUGGINGFACE_CLIENT_ID
+		},
+		{
+			provider: 'notion',
+			label: 'Continue with Notion',
+			clientId: NOTION_CLIENT_ID
+		},
+		{
+			provider: 'reddit',
+			label: 'Continue with Reddit',
+			clientId: REDDIT_CLIENT_ID
+		},
+		{
+			provider: 'slack',
+			label: 'Continue with Slack',
+			clientId: SLACK_CLIENT_ID
+		},
+		{
+			provider: 'spotify',
+			label: 'Continue with Spotify',
+			clientId: SPOTIFY_CLIENT_ID
+		},
+		{
+			provider: 'twitter',
+			label: 'Continue with Twitter',
+			clientId: TWITTER_CLIENT_ID
+		},
+		{
+			provider: 'twitch',
+			label: 'Continue with Twitch',
+			clientId: TWITCH_CLIENT_ID
+		},
+		{
+			provider: 'vercel',
+			label: 'Continue with Vercel',
+			clientId: VERCEL_CLIENT_ID
+		}
+	];
+
+	const getActiveProviders = () => {
+		let baseProviders = OAUTH_TEMPLATES[templateParam] || OAUTH_TEMPLATES['popular'];
+		if (baseProviders.length === 0) {
+			baseProviders = OAUTH_TEMPLATES['popular'];
+		}
+
+		// Start with base template
+		let active = new Set(baseProviders);
+
+		// Add inclusions
+		inclusionParam.forEach((p) => {
+			if (ALLOWED_SOCIAL_PROVIDERS.includes(p as SocialProvider)) {
+				active.add(p as SocialProvider);
+			}
+		});
+
+		// Remove disclusions
+		allDisclusions.forEach((p) => {
+			active.delete(p as SocialProvider);
+		});
+
+		return Array.from(active)
+			.map((p) => allProviderConfigs.find((c) => c.provider === p))
+			.filter(
+				(c): c is (typeof allProviderConfigs)[0] =>
+					!!c && ALLOWED_SOCIAL_PROVIDERS.includes(c.provider)
+			);
+	};
+
+	const activeProviders = getActiveProviders();
+	const providerCount = activeProviders.length;
+
+	// Adaptive layout classes
+	let containerClass = 'space-y-3';
+	let buttonClass = 'w-full flex items-center justify-center py-3';
+	let iconClass = 'mr-2 h-5 w-5';
+	let showLabel = true;
+
+	if (providerCount > 3) {
+		containerClass = 'grid grid-cols-4 gap-2';
+		buttonClass = 'w-full flex items-center justify-center py-2 px-0';
+		iconClass = 'h-5 w-5';
+		showLabel = false;
+	}
 </script>
 
-<div class="space-y-3">
-	<Button
-		variant="outline"
-		class="w-full flex items-center justify-center py-3"
-		onclick={onGoogleClickAction}
-		disabled={isLoading}
-	>
-		<svg class="mr-2 h-5 w-5" viewBox="0 0 24 24">
-			<path
-				fill="#4285F4"
-				d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-			/>
-			<path
-				fill="#34A853"
-				d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-			/>
-			<path
-				fill="#FBBC05"
-				d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-			/>
-			<path
-				fill="#EA4335"
-				d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-			/>
-		</svg>
-		Continue with Google
-	</Button>
-
-	<Button
-		variant="outline"
-		class="w-full flex items-center justify-center py-3"
-		onclick={onPasskeyClickAction}
-		disabled={isLoading}
-	>
-		<Key class="mr-2 text-lg" />
-		Continue with Passkey
-	</Button>
-
-	{#if false}
+<div class={containerClass}>
+	{#each activeProviders as config}
 		<Button
 			variant="outline"
-			class="w-full flex items-center justify-center py-3"
-			onclick={onAnonymousClickAction}
+			class={buttonClass}
+			onclick={() => onSocialClickAction(config.provider)}
 			disabled={isLoading}
 		>
-			<svg class="mr-2 h-5 w-5 text-gray-900" fill="currentColor" viewBox="0 0 24 24">
-				<path
-					d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"
-				/>
-			</svg>
-			Continue as Guest
+			<SocialIcons iconName={config.provider} class={iconClass} />
+			{#if showLabel}
+				{config.label}
+			{/if}
 		</Button>
-	{/if}
+	{/each}
 </div>

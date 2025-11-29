@@ -1,11 +1,12 @@
-import { PUBLIC_BETTER_AUTH_URL } from '$env/static/public';
 import { parse } from 'tldts';
+import { PUBLIC_AUTH_URL } from './publicConstants';
 
 export function getAuthURL(path?: string) {
-	if (!path) return PUBLIC_BETTER_AUTH_URL;
-	if (path.startsWith('/')) return `${PUBLIC_BETTER_AUTH_URL}${path}`;
+	if (!PUBLIC_AUTH_URL) return '';
+	if (!path) return PUBLIC_AUTH_URL;
+	if (path.startsWith('/')) return `${PUBLIC_AUTH_URL}${path}`;
 	if (path.startsWith('http')) return path;
-	return `${PUBLIC_BETTER_AUTH_URL}/${path}`;
+	return `${PUBLIC_AUTH_URL}/${path}`;
 }
 
 export function getAuthCallbackURL(callbackUrl: string) {

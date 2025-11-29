@@ -7,7 +7,7 @@
 	import { sendVerificationOTP, signInWithEmailOTP } from '$lib/auth/authHandlers';
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
-	import { PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY } from '$env/static/public';
+	import { PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY } from '$lib/utils/publicConstants';
 
 	interface Props {
 		email: string;
@@ -158,7 +158,7 @@
 <div class="my-4 flex justify-center">
 	{#key turnstileResetKey}
 		<Turnstile
-			siteKey={PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY}
+			siteKey={PUBLIC_CLOUDFLARE_TURNSTILE_SITE_KEY || ''}
 			on:turnstile-callback={(e) => {
 				turnstileToken = e.detail.token;
 			}}

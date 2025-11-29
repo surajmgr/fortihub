@@ -22,15 +22,15 @@ const sessionSchema = z.object({
 
 const userSchema = z.object({
 	id: z.string(),
-	name: z.string().optional(),
-	email: z.string().optional(),
-	emailVerified: z.boolean().optional(),
-	image: z.string().optional(),
-	username: z.string().optional(),
-	displayUsername: z.string().optional(),
+	name: z.string().optional().nullable(),
+	email: z.string().optional().nullable(),
+	emailVerified: z.boolean().optional().nullable(),
+	image: z.string().optional().nullable(),
+	username: z.string().optional().nullable(),
+	displayUsername: z.string().optional().nullable(),
 	isAnonymous: z.boolean().nullable().optional(),
 	role: roleSchema,
-	twoFactorEnabled: z.boolean().optional(),
+	twoFactorEnabled: z.boolean().optional().nullable(),
 	createdAt: IsoDateString,
 	updatedAt: IsoDateString
 });
@@ -38,7 +38,7 @@ const userSchema = z.object({
 export const authSessionResponseSchema = z
 	.object({
 		session: sessionSchema,
-		user: userSchema
+		user: userSchema.nullable()
 	})
 	.nullable();
 

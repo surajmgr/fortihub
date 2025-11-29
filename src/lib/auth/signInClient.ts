@@ -1,4 +1,4 @@
-import { asyncHandlerClient } from '../utils/handler';
+import { asyncHandlerClient } from '$lib/utils/handler';
 import { authClient } from './authClient';
 
 export const handlePassKeySignIn = asyncHandlerClient(async (args?: { callbackUrl?: string }) => {

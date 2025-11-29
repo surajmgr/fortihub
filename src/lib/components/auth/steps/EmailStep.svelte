@@ -7,10 +7,12 @@
 	import {
 		handleGoogleSignIn,
 		handlePassKeySignIn,
-		handleAnonymousSignIn
+		handleAnonymousSignIn,
+		handleSocialSignIn
 	} from '$lib/auth/authHandlers';
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
+	import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
 
 	interface Props {
 		authMode: 'signin' | 'signup';
@@ -45,20 +47,23 @@
 		}
 	}
 
-	async function handleOAuthSignIn(provider: string) {
+	async function handleOAuthSignIn(provider: SocialProvider | 'passkey' | 'anonymous') {
 		isLoading = true;
 		error = '';
 
 		try {
 			switch (provider) {
-				case 'google':
-					await handleGoogleSignIn({ callbackUrl });
-					break;
 				case 'passkey':
 					await handlePassKeySignIn({ callbackUrl });
 					break;
 				case 'anonymous':
 					await handleAnonymousSignIn({ callbackUrl });
+					break;
+				default:
+					if (!ALLOWED_SOCIAL_PROVIDERS.includes(provider)) {
+						throw new Error(`Invalid provider: ${provider}`);
+					}
+					await handleSocialSignIn({ provider, callbackUrl });
 					break;
 			}
 		} catch (err) {
@@ -76,7 +81,7 @@
 
 <OAuthProviders
 	onAnonymousClickAction={() => handleOAuthSignIn('anonymous')}
-	onGoogleClickAction={() => handleOAuthSignIn('google')}
+	onSocialClickAction={(provider: SocialProvider) => handleOAuthSignIn(provider)}
 	onPasskeyClickAction={() => handleOAuthSignIn('passkey')}
 	{isLoading}
 />

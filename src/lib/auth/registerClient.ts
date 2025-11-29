@@ -1,7 +1,7 @@
-import { asyncHandlerClient } from '../utils/handler';
 import { authClient } from './authClient';
 import { getErrorMessage } from '$lib/utils/error';
 import toast from 'svelte-5-french-toast';
+import { asyncHandlerClient } from '$lib/utils/handler';
 
 export const handlePassKeyRegister = asyncHandlerClient(async () => {
 	const notifToast = toast.loading('Adding Passkey...');

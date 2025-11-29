@@ -11,8 +11,14 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
-	},
+		"lint": "prettier --check . && eslint .",
+		"db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:push": "drizzle-kit push",
+		"db:pull": "drizzle-kit pull",
+		"db:studio": "drizzle-kit studio",
+		"db:check": "drizzle-kit check"
+		},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.39.1",
@@ -40,11 +46,20 @@
 		"@rollup/rollup-darwin-x64": "^4.53.3"
 	},
 	"dependencies": {
-		"@better-auth/passkey": "^1.4.2",
+		"@better-auth/expo": "^1.4.3",
+		"@better-auth/passkey": "^1.4.3",
 		"@lucide/svelte": "^0.554.0",
-		"better-auth": "^1.4.2",
+		"@types/nodemailer": "^7.0.4",
+		"@types/pg": "^8.15.6",
+		"better-auth": "^1.4.3",
+		"drizzle-kit": "^0.31.7",
+		"drizzle-orm": "^0.44.7",
+		"nodemailer": "^7.0.11",
+		"pg": "^8.16.3",
+		"resend": "^6.5.2",
 		"svelte-5-french-toast": "^2.0.6",
 		"svelte-turnstile": "^0.11.0",
-		"tldts": "^7.0.19"
+		"tldts": "^7.0.19",
+		"unique-username-generator": "^1.5.1"
 	}
 }

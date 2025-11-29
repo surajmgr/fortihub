@@ -51,8 +51,8 @@
 	}
 </script>
 
-<div class="flex gap-2 justify-center" on:paste={handlePaste}>
-	{#each otp as digit, i}
+<div class="flex gap-2 justify-center" onpaste={handlePaste}>
+	{#each Array(otp.length).keys() as i}
 		<input
 			id="otp-{i}"
 			type="text"
@@ -63,8 +63,8 @@
 			bind:value={otp[i]}
 			disabled={isLoading}
 			autocomplete="off"
-			on:input={(e) => handleInput(i, e)}
-			on:keydown={(e) => handleKeydown(i, e)}
+			oninput={(e) => handleInput(i, e)}
+			onkeydown={(e) => handleKeydown(i, e)}
 		/>
 	{/each}
 </div>

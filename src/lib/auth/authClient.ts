@@ -7,7 +7,7 @@ import {
 	usernameClient
 } from 'better-auth/client/plugins';
 import { passkeyClient } from '@better-auth/passkey/client';
-import { PUBLIC_GOOGLE_CLIENT_ID } from '$env/static/public';
+import { GOOGLE_CLIENT_ID } from '$lib/utils/publicConstants';
 
 export const authClient = createAuthClient({
 	baseURL: getAuthURL(),
@@ -19,7 +19,7 @@ export const authClient = createAuthClient({
 		passkeyClient(),
 		anonymousClient(),
 		oneTapClient({
-			clientId: PUBLIC_GOOGLE_CLIENT_ID
+			clientId: GOOGLE_CLIENT_ID || ""
 		}),
 		emailOTPClient()
 	]
