@@ -4,7 +4,7 @@ import { authConfig } from "./authConfig";
 import db from "../../db";
 
 export const auth = betterAuth({
-    database: drizzleAdapter(db(), {
+    database: drizzleAdapter(db()!, {
         provider: "pg",
     }),
     ...authConfig,

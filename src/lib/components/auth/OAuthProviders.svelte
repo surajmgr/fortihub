@@ -158,7 +158,7 @@
 			.map((p) => allProviderConfigs.find((c) => c.provider === p))
 			.filter(
 				(c): c is (typeof allProviderConfigs)[0] =>
-					!!c && ALLOWED_SOCIAL_PROVIDERS.includes(c.provider)
+					!!c && ALLOWED_SOCIAL_PROVIDERS.includes(c.provider) && !!c.clientId
 			);
 	};
 
@@ -186,6 +186,7 @@
 			class={buttonClass}
 			onclick={() => onSocialClickAction(config.provider)}
 			disabled={isLoading}
+			title={config.label}
 		>
 			<SocialIcons iconName={config.provider} class={iconClass} />
 			{#if showLabel}

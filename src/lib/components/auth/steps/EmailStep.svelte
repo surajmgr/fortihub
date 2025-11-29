@@ -1,15 +1,9 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Input from '$lib/components/ui/Input.svelte';
 	import { Mail } from '@lucide/svelte';
 	import OAuthProviders from '$lib/components/auth/OAuthProviders.svelte';
-	import {
-		handleGoogleSignIn,
-		handlePassKeySignIn,
-		handleAnonymousSignIn,
-		handleSocialSignIn
-	} from '$lib/auth/authHandlers';
+	import { handleAnonymousSignIn, handleSocialSignIn } from '$lib/auth/authHandlers';
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
 	import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
@@ -53,9 +47,6 @@
 
 		try {
 			switch (provider) {
-				case 'passkey':
-					await handlePassKeySignIn({ callbackUrl });
-					break;
 				case 'anonymous':
 					await handleAnonymousSignIn({ callbackUrl });
 					break;

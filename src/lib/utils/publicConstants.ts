@@ -32,6 +32,7 @@ export const HUGGINGFACE_CLIENT_ID = pubEnv.PUBLIC_HUGGINGFACE_CLIENT_ID || null
 export const NOTION_CLIENT_ID = pubEnv.PUBLIC_NOTION_CLIENT_ID || null;
 export const REDDIT_CLIENT_ID = pubEnv.PUBLIC_REDDIT_CLIENT_ID || null;
 export const SLACK_CLIENT_ID = pubEnv.PUBLIC_SLACK_CLIENT_ID || null;
+export const SLACK_CLIENT_TEAM = pubEnv.PUBLIC_SLACK_CLIENT_TEAM || null;
 export const SPOTIFY_CLIENT_ID = pubEnv.PUBLIC_SPOTIFY_CLIENT_ID || null;
 export const TWITTER_CLIENT_ID = pubEnv.PUBLIC_TWITTER_CLIENT_ID || null;
 export const TWITCH_CLIENT_ID = pubEnv.PUBLIC_TWITCH_CLIENT_ID || null;
