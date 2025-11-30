@@ -2,7 +2,7 @@ import z from 'zod';
 import { IsoDateString, roleSchema } from './common';
 
 const sessionSchema = z.object({
-	id: z.string(),
+	id: z.string().optional(),
 	token: z.string(),
 	userId: z.string(),
 	expiresAt: IsoDateString,

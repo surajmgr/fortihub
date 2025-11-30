@@ -10,7 +10,6 @@
 	import { authClient } from '$lib/auth/authClient';
 	import type { GetSessionResponse } from '$lib/auth/authHandlers';
 	import { getAuthCallbackURL, getHostURL, handleGoBack, isValidURL } from '$lib/utils/utils';
-	import { Pencil, Check } from '@lucide/svelte';
 	import { onMount, untrack } from 'svelte';
 
 	type AuthStep =
