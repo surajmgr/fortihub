@@ -1,4 +1,4 @@
-export type OTPEmailType = "sign-in" | "email-verification" | "forget-password";
+export type OTPEmailType = "sign-in" | "email-verification" | "forget-password" | "magic-link";
 
 export interface SendOTPEmailParams {
   email: string;

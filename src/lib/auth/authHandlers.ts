@@ -8,7 +8,6 @@ import {
 } from '$lib/schema/auth';
 import { apiEndpoints } from '$lib/utils/apiEndpoints';
 import { getAuthCallbackURL, handleAuthRedirect } from '$lib/utils/utils';
-import type { z } from 'better-auth';
 import { asyncHandlerClient, createApiHandler } from '../utils/handler';
 import { authClient } from './authClient';
 import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
@@ -222,6 +221,21 @@ export const resetPassword = asyncHandlerClient(
 	},
 	'resetPassword'
 );
+
+// Handle Magic Link Sign In
+export const handleMagicLinkSignIn = asyncHandlerClient(async (args: { email: string; callbackUrl?: string }) => {
+	const { email, callbackUrl = '/' } = args;
+	const { data, error } = await authClient.signIn.magicLink({
+		email,
+		callbackURL: getAuthCallbackURL(callbackUrl)
+	});
+
+	if (error) {
+		throw error;
+	}
+
+	return data;
+}, 'handleMagicLinkSignIn');
 
 export const handleSocialSignIn = asyncHandlerClient(async (args: { provider: SocialProvider; callbackUrl?: string }) => {
 	const { provider, callbackUrl = '/' } = args;

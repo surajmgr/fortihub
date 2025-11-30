@@ -1,8 +1,7 @@
 import { Resend } from "resend";
 import { generateEmailOTPTemplate } from "./templates/emailOTPTemplate";
 import { EMAIL_FROM, EMAIL_FROM_NAME, EMAIL_SENDER_PROVIDER, NODE_ENV, RESEND_API_KEY } from "$lib/utils/server/constants";
-import type { SendOTPEmailParams } from "$lib/types/email";
-import { PUBLIC_AUTH_URL } from "$lib/utils/publicConstants";
+import type { OTPEmailType, SendOTPEmailParams } from "$lib/types/email";
 
 export async function sendOTPEmail({ email, otp, type }: SendOTPEmailParams) {
   if (NODE_ENV === "development") {
@@ -15,7 +14,6 @@ export async function sendOTPEmail({ email, otp, type }: SendOTPEmailParams) {
     otp,
     type,
     title: getTitleByType(type),
-    url: PUBLIC_AUTH_URL || "",
   });
   const subject = getSubjectByType(type);
 
@@ -56,7 +54,7 @@ export async function sendOTPEmail({ email, otp, type }: SendOTPEmailParams) {
   }
 }
 
-function getSubjectByType(type: "sign-in" | "email-verification" | "forget-password"): string {
+function getSubjectByType(type: OTPEmailType): string {
   switch (type) {
     case "sign-in":
       return "Your Sign-In Code";
@@ -64,12 +62,14 @@ function getSubjectByType(type: "sign-in" | "email-verification" | "forget-passw
       return "Verify Your Email";
     case "forget-password":
       return "Reset Your Password";
+    case "magic-link":
+      return "Your Magic Link";
     default:
       return "Your Verification Code";
   }
 }
 
-function getTitleByType(type: "sign-in" | "email-verification" | "forget-password"): string {
+function getTitleByType(type: OTPEmailType): string {
   switch (type) {
     case "sign-in":
       return "Sign In to Your Account";
@@ -77,6 +77,8 @@ function getTitleByType(type: "sign-in" | "email-verification" | "forget-passwor
       return "Verify Your Email Address";
     case "forget-password":
       return "Reset Your Password";
+    case "magic-link":
+      return "Sign In to Your Account";
     default:
       return "Verification Code";
   }

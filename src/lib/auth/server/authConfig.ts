@@ -2,13 +2,14 @@ import { sendOTPEmail } from "$lib/email/sendOTP";
 import { generateUsername, getHostDomain, getRpId } from "$lib/utils";
 import { expo } from "@better-auth/expo";
 import type { BetterAuthOptions } from "better-auth";
-import { admin, anonymous, captcha, emailOTP, oneTap, openAPI, twoFactor, username } from "better-auth/plugins";
+import { admin, anonymous, captcha, emailOTP, magicLink, oneTap, openAPI, twoFactor, username } from "better-auth/plugins";
 import { passkey } from "@better-auth/passkey";
 import { adminConfig } from "./adminConfig";
-import { BETTER_AUTH_SECRET, CLOUDFLARE_TURNSTILE_SECRET_KEY, DISCORD_CLIENT_SECRET, ENABLE_DISCORD, ENABLE_FACEBOOK, ENABLE_GITHUB, ENABLE_GITLAB, ENABLE_GOOGLE, ENABLE_HUGGINGFACE, ENABLE_LINKEDIN, ENABLE_MICROSOFT, ENABLE_NOTION, ENABLE_REDDIT, ENABLE_SLACK, ENABLE_SPOTIFY, ENABLE_TWITCH, ENABLE_TWITTER, ENABLE_VERCEL, FACEBOOK_CLIENT_SECRET, GITHUB_CLIENT_SECRET, GITLAB_CLIENT_SECRET, GOOGLE_CLIENT_SECRET, HUGGINGFACE_CLIENT_SECRET, LINKEDIN_CLIENT_SECRET, MICROSOFT_CLIENT_SECRET, NODE_ENV, NOTION_CLIENT_SECRET, PASSKEY_ORIGIN, PASSKEY_RP_NAME, REDDIT_CLIENT_SECRET, SLACK_CLIENT_SECRET, SPOTIFY_CLIENT_SECRET, TRUSTED_ORIGINS, TWITCH_CLIENT_SECRET, TWITTER_CLIENT_SECRET, VERCEL_CLIENT_SECRET } from "$lib/utils/server/constants";
+import { BETTER_AUTH_SECRET, CLOUDFLARE_TURNSTILE_SECRET_KEY, DISCORD_CLIENT_SECRET, ENABLE_DISCORD, ENABLE_FACEBOOK, ENABLE_GITHUB, ENABLE_GITLAB, ENABLE_GOOGLE, ENABLE_HUGGINGFACE, ENABLE_LINKEDIN, ENABLE_MICROSOFT, ENABLE_NOTION, ENABLE_REDDIT, ENABLE_SLACK, ENABLE_SPOTIFY, ENABLE_TWITCH, ENABLE_TWITTER, ENABLE_VERCEL, FACEBOOK_CLIENT_SECRET, GITHUB_CLIENT_SECRET, GITLAB_CLIENT_SECRET, GOOGLE_CLIENT_SECRET, HUGGINGFACE_CLIENT_SECRET, LINKEDIN_CLIENT_SECRET, MICROSOFT_CLIENT_SECRET, NODE_ENV, NOTION_CLIENT_SECRET, PASSKEY_ORIGIN, PASSKEY_RP_NAME, REDDIT_CLIENT_SECRET, REDIS_URL, SLACK_CLIENT_SECRET, SPOTIFY_CLIENT_SECRET, TRUSTED_ORIGINS, TWITCH_CLIENT_SECRET, TWITTER_CLIENT_SECRET, VERCEL_CLIENT_SECRET } from "$lib/utils/server/constants";
 import { PUBLIC_AUTH_URL, GOOGLE_CLIENT_ID, GITHUB_CLIENT_ID, DISCORD_CLIENT_ID, MICROSOFT_CLIENT_ID, LINKEDIN_CLIENT_ID, FACEBOOK_CLIENT_ID, GITLAB_CLIENT_ID, HUGGINGFACE_CLIENT_ID, NOTION_CLIENT_ID, REDDIT_CLIENT_ID, SLACK_CLIENT_ID, SPOTIFY_CLIENT_ID, TWITTER_CLIENT_ID, TWITCH_CLIENT_ID, VERCEL_CLIENT_ID, GITLAB_ISSUER, ENABLE_ANONYMOUS, SLACK_CLIENT_TEAM } from "$lib/utils/publicConstants";
 import { sveltekitCookies } from "better-auth/svelte-kit";
 import { getRequestEvent } from "$app/server";
+import redis from "$lib/db/redis";
 
 export const authConfig: BetterAuthOptions = {
   secret: BETTER_AUTH_SECRET,
@@ -18,6 +19,7 @@ export const authConfig: BetterAuthOptions = {
   },
   rateLimit: {
     enabled: true,
+    storage: 'secondary-storage',
   },
   emailAndPassword: {
     enabled: true,
@@ -33,6 +35,15 @@ export const authConfig: BetterAuthOptions = {
   plugins: [
     openAPI(),
     username(),
+    magicLink({
+      sendMagicLink: async ({ email, url }) => {
+        await sendOTPEmail({
+          email,
+          otp: url,
+          type: "magic-link",
+        });
+      },
+    }),
     ...(ENABLE_ANONYMOUS ? [anonymous()] : []),
     passkey({
       rpID: getRpId() || "",
@@ -159,6 +170,20 @@ export const authConfig: BetterAuthOptions = {
       },
     } : {}),
   },
+  ...(REDIS_URL ? {
+    secondaryStorage: {
+      get: async (key) => {
+        return await redis().get(key);
+      },
+      set: async (key, value, ttl) => {
+        if (ttl) await redis().set(key, value, 'EX', ttl);
+        else await redis().set(key, value);
+      },
+      delete: async (key) => {
+        await redis().del(key);
+      }
+    },
+  } : {}),
   databaseHooks: {
     user: {
       create: {
@@ -191,6 +216,11 @@ export const authConfig: BetterAuthOptions = {
   },
   trustedOrigins: [...TRUSTED_ORIGINS, PUBLIC_AUTH_URL!],
   advanced: {
+    cookies: {
+      session_token: {
+        name: "auth.session_token",
+      },
+    },
     crossSubDomainCookies: {
       enabled: true,
       domain: `.${getHostDomain(PUBLIC_AUTH_URL!)}`,

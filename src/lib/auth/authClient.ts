@@ -3,6 +3,7 @@ import { getAuthURL } from '$lib/utils/utils';
 import {
 	anonymousClient,
 	emailOTPClient,
+	magicLinkClient,
 	oneTapClient,
 	usernameClient
 } from 'better-auth/client/plugins';
@@ -18,6 +19,7 @@ export const authClient = createAuthClient({
 		usernameClient(),
 		passkeyClient(),
 		anonymousClient(),
+		magicLinkClient(),
 		oneTapClient({
 			clientId: GOOGLE_CLIENT_ID || ""
 		}),

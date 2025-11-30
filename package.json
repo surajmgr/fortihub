@@ -18,7 +18,7 @@
 		"db:pull": "drizzle-kit pull",
 		"db:studio": "drizzle-kit studio",
 		"db:check": "drizzle-kit check"
-		},
+	},
 	"devDependencies": {
 		"@eslint/compat": "^1.4.0",
 		"@eslint/js": "^9.39.1",
@@ -54,6 +54,7 @@
 		"better-auth": "^1.4.3",
 		"drizzle-kit": "^0.31.7",
 		"drizzle-orm": "^0.44.7",
+		"ioredis": "^5.8.2",
 		"nodemailer": "^7.0.11",
 		"pg": "^8.16.3",
 		"resend": "^6.5.2",
