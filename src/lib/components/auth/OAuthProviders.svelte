@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Button from '$lib/components/ui/Button.svelte';
 	import {
 		GITHUB_CLIENT_ID,
@@ -21,25 +22,23 @@
 		OAUTH_TEMPLATES,
 		ENABLE_ANONYMOUS
 	} from '$lib/utils/publicConstants';
-	import { GithubIcon, Key } from '@lucide/svelte';
 	import SocialIcons from '../ui/SocialIcons.svelte';
 
 	interface Props {
 		onSocialClickAction: (provider: SocialProvider) => void;
-		onPasskeyClickAction: () => void;
-		onAnonymousClickAction: () => void;
 		isLoading?: boolean;
 	}
 
-	let { onSocialClickAction, onPasskeyClickAction, isLoading = false }: Props = $props();
+	let { onSocialClickAction, isLoading = false }: Props = $props();
 
-	const params = new URLSearchParams(window.location.search);
-	const templateParam = params.get('template') ?? 'popular';
-	const inclusionParam = params.get('include')?.split(',') ?? [];
-	const disclusionParam = params.get('exclude')?.split(',') ?? [];
-	// Legacy support for 'disable' param
-	const disableParam = params.get('disable')?.split(',') ?? [];
-	const allDisclusions = [...disclusionParam, ...disableParam];
+	const urlParams = $derived($page.url.searchParams);
+
+	const templateParam = $derived(urlParams.get('template') ?? 'popular');
+	const inclusionParam = $derived(urlParams.get('include')?.split(',') ?? []);
+	const disclusionParam = $derived(urlParams.get('exclude')?.split(',') ?? []);
+	const disableParam = $derived(urlParams.get('disable')?.split(',') ?? []);
+
+	const allDisclusions = $derived([...disclusionParam, ...disableParam]);
 
 	const allProviderConfigs: {
 		provider: SocialProvider;
@@ -133,7 +132,7 @@
 		}
 	];
 
-	const getActiveProviders = () => {
+	const activeProviders = $derived.by(() => {
 		let baseProviders = OAUTH_TEMPLATES[templateParam] || OAUTH_TEMPLATES['popular'];
 		if (baseProviders.length === 0) {
 			baseProviders = OAUTH_TEMPLATES['popular'];
@@ -160,23 +159,19 @@
 				(c): c is (typeof allProviderConfigs)[0] =>
 					!!c && ALLOWED_SOCIAL_PROVIDERS.includes(c.provider) && !!c.clientId
 			);
-	};
+	});
 
-	const activeProviders = getActiveProviders();
-	const providerCount = activeProviders.length;
+	const providerCount = $derived(activeProviders.length);
 
 	// Adaptive layout classes
-	let containerClass = 'space-y-3';
-	let buttonClass = 'w-full flex items-center justify-center py-3';
-	let iconClass = 'mr-2 h-5 w-5';
-	let showLabel = true;
-
-	if (providerCount > 3) {
-		containerClass = 'grid grid-cols-4 gap-2';
-		buttonClass = 'w-full flex items-center justify-center py-2 px-0';
-		iconClass = 'h-5 w-5';
-		showLabel = false;
-	}
+	let containerClass = $derived(providerCount > 3 ? 'grid grid-cols-4 gap-2' : 'space-y-3');
+	let buttonClass = $derived(
+		providerCount > 3
+			? 'w-full flex items-center justify-center py-2 px-0'
+			: 'w-full flex items-center justify-center py-3'
+	);
+	let iconClass = $derived(providerCount > 3 ? 'h-5 w-5' : 'mr-2 h-5 w-5');
+	let showLabel = $derived(providerCount <= 3);
 </script>
 
 <div class={containerClass}>
