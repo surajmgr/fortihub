@@ -27,16 +27,27 @@
 	interface Props {
 		onSocialClickAction: (provider: SocialProvider) => void;
 		isLoading?: boolean;
+		template?: string;
+		include?: string[];
+		exclude?: string[];
+		disable?: string[];
 	}
 
-	let { onSocialClickAction, isLoading = false }: Props = $props();
+	let {
+		onSocialClickAction,
+		isLoading = false,
+		template,
+		include,
+		exclude,
+		disable
+	}: Props = $props();
 
 	const urlParams = $derived($page.url.searchParams);
 
-	const templateParam = $derived(urlParams.get('template') ?? 'popular');
-	const inclusionParam = $derived(urlParams.get('include')?.split(',') ?? []);
-	const disclusionParam = $derived(urlParams.get('exclude')?.split(',') ?? []);
-	const disableParam = $derived(urlParams.get('disable')?.split(',') ?? []);
+	const templateParam = $derived(template ?? urlParams.get('template') ?? 'popular');
+	const inclusionParam = $derived(include ?? urlParams.get('include')?.split(',') ?? []);
+	const disclusionParam = $derived(exclude ?? urlParams.get('exclude')?.split(',') ?? []);
+	const disableParam = $derived(disable ?? urlParams.get('disable')?.split(',') ?? []);
 
 	const allDisclusions = $derived([...disclusionParam, ...disableParam]);
 

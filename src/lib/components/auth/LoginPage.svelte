@@ -11,6 +11,7 @@
 	import type { GetSessionResponse } from '$lib/auth/authHandlers';
 	import { getAuthCallbackURL, getHostURL, handleGoBack, isValidURL } from '$lib/utils/utils';
 	import { Pencil, Check } from '@lucide/svelte';
+	import { onMount, untrack } from 'svelte';
 
 	type AuthStep =
 		| 'email'
@@ -34,6 +35,7 @@
 	let isEditable = $state(queryParams.get('editable') === 'true');
 	let isEditingUrl = $state(false);
 	let urlError = $state('');
+	let urlInputRef: HTMLInputElement | undefined = $state();
 
 	// Derived state for the actual callback URL to use
 	let callbackUrl = $derived(rawCallbackUrl || '/');
@@ -45,7 +47,8 @@
 	let useOTP = $state(false);
 	let session = $state<GetSessionResponse | null>(null);
 
-	$effect(() => {
+	// Initialize session check only once
+	onMount(() => {
 		const init = async () => {
 			// If no callback URL provided or invalid, allow editing
 			if (!rawCallbackUrl || !isValidURL(rawCallbackUrl)) {
@@ -75,6 +78,12 @@
 
 	$effect(() => {
 		authMode = initialMode;
+	});
+
+	$effect(() => {
+		if (isEditingUrl && urlInputRef) {
+			urlInputRef.focus();
+		}
 	});
 
 	function validateAndSaveUrl() {
@@ -205,7 +214,7 @@
 </script>
 
 <div
-	class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4"
+	class="min-h-screen bg-gradient-to-br from-blue-50 via-blue-50 to-purple-50 flex items-center justify-center p-4"
 >
 	<div class="w-full max-w-md">
 		<!-- Header -->
@@ -214,43 +223,67 @@
 				{getStepTitle()}
 			</h1>
 
-			{#if isEditingUrl || (!isValidURL(callbackUrl) && callbackUrl !== '/')}
-				<div class="mt-4 max-w-sm mx-auto relative group">
-					<input
-						type="text"
-						bind:value={rawCallbackUrl}
-						placeholder="https://your-app.com"
-						class="w-full text-center bg-transparent border-b border-dashed border-gray-300 focus:border-indigo-500 outline-none py-1 px-8 text-gray-600 placeholder:text-gray-400 transition-colors"
-						onkeydown={(e) => e.key === 'Enter' && validateAndSaveUrl()}
-						onblur={validateAndSaveUrl}
-						autofocus
-					/>
-					{#if urlError}
-						<p class="text-red-500 text-xs mt-1">{urlError}</p>
-					{/if}
+			<div class="flex flex-col items-center justify-center text-gray-600 text-sm">
+				<div class="text-center">
+					<span class="font-medium">{getStepDescription()}</span>
 				</div>
-			{:else}
-				<div class="flex flex-col items-center justify-center gap-1 text-gray-600">
-					<p>{getStepDescription()}</p>
 
-					{#if callbackUrl && callbackUrl !== '/' && authStep !== 'already-logged-in'}
-						<div class="flex items-center gap-2 text-sm mt-1 group relative">
-							<span class="text-gray-500">to</span>
-							<button
-								class="font-medium text-indigo-600 hover:text-indigo-700 border-b border-transparent hover:border-indigo-200 transition-all flex items-center gap-1.5"
-								onclick={() => isEditable && (isEditingUrl = true)}
-								disabled={!isEditable}
-								title={isEditable ? 'Click to edit URL' : undefined}
-							>
-								{getHostURL(callbackUrl)}
-								{#if isEditable}
-									<Pencil size={12} class="opacity-0 group-hover:opacity-50 transition-opacity" />
+				{#if (callbackUrl && callbackUrl !== '/' && authStep !== 'already-logged-in') || isEditingUrl}
+					<div class="flex flex-wrap items-center justify-center gap-2 text-center">
+						<span class="text-gray-500">to</span>
+
+						<div class="relative inline-block">
+							{#if isEditingUrl}
+								<input
+									bind:this={urlInputRef}
+									type="text"
+									bind:value={rawCallbackUrl}
+									placeholder="https://your-app.com"
+									autofocus
+									onkeydown={(e) => e.key === 'Enter' && validateAndSaveUrl()}
+									onblur={validateAndSaveUrl}
+									class="w-full px-3 py-2 rounded-lg bg-white/70 shadow-sm border outline-none font-medium text-gray-900 placeholder:text-gray-400 transition-all duration-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-center min-w-[260px] max-w-[380px] backdrop-blur-sm {urlError
+										? 'border-red-500 focus:ring-red-400'
+										: 'border-gray-300'}"
+								/>
+
+								{#if urlError}
+									<p
+										class="absolute left-1/2 -translate-x-1/2 mt-1 text-xs text-red-500 whitespace-nowrap animate-in fade-in"
+									>
+										{urlError}
+									</p>
 								{/if}
-							</button>
+							{:else}
+								<button
+									type="button"
+									class="group inline-flex items-center gap-1.5 font-medium text-blue-600 hover:text-blue-700 px-2 py-1 -mx-2 rounded transition-all duration-150"
+									onclick={() => isEditable && (isEditingUrl = true)}
+									disabled={!isEditable}
+									title={isEditable ? 'Click to edit URL' : undefined}
+								>
+									<span class="border-b border-dashed border-blue-400">
+										{getHostURL(callbackUrl)}
+									</span>
+
+									{#if isEditable}
+										<svg
+											class="w-3.5 h-3.5 opacity-0 group-hover:opacity-60 transition-opacity"
+											viewBox="0 0 24 24"
+											fill="none"
+											stroke="currentColor"
+											stroke-width="2"
+										>
+											<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+											<path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+										</svg>
+									{/if}
+								</button>
+							{/if}
 						</div>
-					{/if}
-				</div>
-			{/if}
+					</div>
+				{/if}
+			</div>
 		</div>
 
 		<!-- Main Card -->
@@ -288,7 +321,7 @@
 
 				{#if authStep === 'loading'}
 					<div class="flex justify-center py-8">
-						<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+						<div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
 					</div>
 				{/if}
 
