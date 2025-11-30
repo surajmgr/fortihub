@@ -4,16 +4,17 @@
 	import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
 	import { page } from '$app/stores';
 	import { goto } from '$app/navigation';
+	import { untrack } from 'svelte';
 
 	// Initialize state from URL
 	let urlParams = $derived($page.url.searchParams);
 
-	let selectedTemplate = $state(urlParams.get('template') ?? 'popular');
+	let selectedTemplate = $state(untrack(() => urlParams.get('template') ?? 'popular'));
 	let selectedIncludes = $state<string[]>(
-		urlParams.get('include')?.split(',').filter(Boolean) ?? []
+		untrack(() => urlParams.get('include')?.split(',').filter(Boolean) ?? [])
 	);
-	let demoCallbackUrl = $state(urlParams.get('callbackUrl') ?? '');
-	let demoEditable = $state(urlParams.get('editable') === 'true');
+	let demoCallbackUrl = $state(untrack(() => urlParams.get('callbackUrl') ?? ''));
+	let demoEditable = $state(untrack(() => urlParams.get('editable') === 'true'));
 
 	// Callback URL editing state
 	let isEditingUrl = $state(false);
@@ -59,6 +60,13 @@
 	const displayProviders = ALLOWED_SOCIAL_PROVIDERS;
 </script>
 
+<svelte:head>
+	<title>FortiHub - Secure Authentication</title>
+	<meta
+		name="description"
+		content="FortiHub is a secure, customizable authentication microservice for your applications."
+	/>
+</svelte:head>
 <div class="min-h-screen bg-white font-sans text-gray-900 flex flex-col">
 	<!-- Header -->
 	<header class="w-full max-w-7xl mx-auto px-6 py-8 flex justify-between items-center">
@@ -69,7 +77,7 @@
 				<Settings size={20} />
 			</div>
 			<h1 class="text-2xl font-bold tracking-tight text-gray-900">
-				Auth<span class="text-blue-600">Microservice</span>
+				Forti<span class="text-blue-600">Hub</span>
 			</h1>
 		</div>
 		<a
@@ -100,9 +108,9 @@
 			<div class="space-y-8">
 				<!-- Template Selection -->
 				<div>
-					<label class="block text-sm font-semibold text-gray-900 mb-4">Choose Template</label>
+					<span class="block text-sm font-semibold text-gray-900 mb-4">Choose Template</span>
 					<div class="flex flex-wrap gap-3">
-						{#each ['popular', 'all', 'minimal'] as t}
+						{#each ['popular', 'all', 'minimal', 'none'] as t}
 							<button
 								class="px-5 py-2.5 text-sm font-medium rounded-full border transition-all duration-200
 									{selectedTemplate === t
@@ -118,7 +126,7 @@
 
 				<!-- Provider Selection -->
 				<div>
-					<label class="block text-sm font-semibold text-gray-900 mb-4">Add Providers</label>
+					<span class="block text-sm font-semibold text-gray-900 mb-4">Add Providers</span>
 					<div class="flex flex-wrap gap-2.5">
 						{#each displayProviders as p}
 							<button
@@ -139,20 +147,23 @@
 
 				<!-- Callback URL -->
 				<div>
-					<label class="block text-sm font-semibold text-gray-900 mb-4">Callback URL</label>
+					<label for="callback-url" class="block text-sm font-semibold text-gray-900 mb-4"
+						>Callback URL</label
+					>
 					<div class="flex items-start gap-3">
 						{#if isEditingUrl}
 							<div class="relative flex-1 max-w-md">
 								<input
+									id="callback-url"
 									bind:this={urlInputRef}
 									type="text"
 									bind:value={demoCallbackUrl}
 									onkeydown={(e) => e.key === 'Enter' && handleUrlSubmit()}
 									onblur={handleUrlSubmit}
-									class="w-full px-0 py-1 text-lg bg-transparent border-b-2 focus:outline-none transition-colors
-										{urlError ? 'border-red-500 text-red-600' : 'border-blue-600 text-gray-900'}"
+									class="w-full px-3 py-2 rounded-lg bg-white/70 shadow-sm border outline-none font-medium text-gray-900 placeholder:text-gray-400 transition-all duration-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-center min-w-[260px] max-w-[380px] backdrop-blur-sm {urlError
+										? 'border-red-500 focus:ring-red-400'
+										: 'border-gray-300'}"
 									placeholder="https://your-app.com"
-									autoFocus
 								/>
 								{#if urlError}
 									<p class="absolute top-full left-0 mt-1 text-xs text-red-500">{urlError}</p>
@@ -161,15 +172,23 @@
 							<button
 								onclick={handleUrlSubmit}
 								class="p-2 text-blue-600 hover:bg-blue-50 rounded-full transition-colors"
+								aria-label="Save URL"
 							>
 								<Check size={20} />
 							</button>
 						{:else}
-							<div
-								class="group flex items-center gap-3 cursor-pointer"
+							<button
+								type="button"
+								class="group flex items-center gap-3 cursor-pointer bg-transparent border-none p-0"
 								onclick={() => {
 									isEditingUrl = true;
 									setTimeout(() => urlInputRef?.focus(), 0);
+								}}
+								onkeydown={(e) => {
+									if (e.key === 'Enter' || e.key === ' ') {
+										isEditingUrl = true;
+										setTimeout(() => urlInputRef?.focus(), 0);
+									}
 								}}
 							>
 								<span
@@ -181,7 +200,7 @@
 									size={16}
 									class="text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity"
 								/>
-							</div>
+							</button>
 						{/if}
 					</div>
 					<div class="mt-4">
@@ -206,7 +225,7 @@
 			</div>
 
 			<!-- Action Button -->
-			<div class="pt-8">
+			<div class="pt-8 flex flex-col gap-2">
 				<a
 					href={getLoginUrl()}
 					class="inline-flex items-center justify-center gap-2 px-8 py-4 bg-gray-900 hover:bg-black text-white text-lg font-medium rounded-2xl transition-all shadow-xl shadow-gray-200 hover:shadow-2xl hover:-translate-y-0.5"
@@ -214,6 +233,7 @@
 					<span>Generate Login Link</span>
 					<ExternalLink size={20} class="opacity-70" />
 				</a>
+				<span class="text-sm text-gray-600 mt-2">{getLoginUrl()}</span>
 			</div>
 		</div>
 

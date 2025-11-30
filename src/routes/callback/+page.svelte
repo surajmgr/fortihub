@@ -52,6 +52,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Verifying Session...</title>
+	<meta name="description" content="Verifying your session. Please wait..." />
+</svelte:head>
 <div class="min-h-screen flex items-center justify-center bg-gray-50 p-4">
 	<div
 		class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-md w-full text-center"

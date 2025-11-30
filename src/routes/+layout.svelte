@@ -8,6 +8,8 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>FortiHub</title>
+	<meta name="description" content="FortiHub Authentication Service" />
 </svelte:head>
 
 {@render children()}

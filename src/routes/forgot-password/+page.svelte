@@ -37,6 +37,11 @@
 	}
 </script>
 
+<svelte:head>
+	<title>Forgot Password - FortiHub</title>
+	<meta name="description" content="Reset your FortiHub account password." />
+</svelte:head>
+
 <div
 	class="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center p-4"
 >

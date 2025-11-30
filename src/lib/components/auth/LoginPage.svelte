@@ -31,8 +31,10 @@
 	);
 
 	// Callback URL handling
-	let rawCallbackUrl = $state(decodeURIComponent(queryParams.get('callbackUrl') || ''));
-	let isEditable = $state(queryParams.get('editable') === 'true');
+	let rawCallbackUrl = $state(
+		untrack(() => decodeURIComponent(queryParams.get('callbackUrl') || ''))
+	);
+	let isEditable = $state(untrack(() => queryParams.get('editable') === 'true'));
 	let isEditingUrl = $state(false);
 	let urlError = $state('');
 	let urlInputRef: HTMLInputElement | undefined = $state();
@@ -239,7 +241,6 @@
 									type="text"
 									bind:value={rawCallbackUrl}
 									placeholder="https://your-app.com"
-									autofocus
 									onkeydown={(e) => e.key === 'Enter' && validateAndSaveUrl()}
 									onblur={validateAndSaveUrl}
 									class="w-full px-3 py-2 rounded-lg bg-white/70 shadow-sm border outline-none font-medium text-gray-900 placeholder:text-gray-400 transition-all duration-200 focus:ring-2 focus:ring-blue-400 focus:border-blue-500 text-center min-w-[260px] max-w-[380px] backdrop-blur-sm {urlError
@@ -290,12 +291,7 @@
 		{#if authStep !== 'initializing'}
 			<div class="bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
 				{#if authStep === 'email'}
-					<EmailStep
-						{authMode}
-						{callbackUrl}
-						onEmailContinue={handleEmailContinue}
-						onSwitchMode={() => (authMode = authMode === 'signin' ? 'signup' : 'signin')}
-					/>
+					<EmailStep {callbackUrl} onEmailContinue={handleEmailContinue} />
 				{/if}
 
 				{#if authStep === 'password'}

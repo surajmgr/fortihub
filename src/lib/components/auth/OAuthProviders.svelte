@@ -145,7 +145,7 @@
 
 	const activeProviders = $derived.by(() => {
 		let baseProviders = OAUTH_TEMPLATES[templateParam] || OAUTH_TEMPLATES['popular'];
-		if (baseProviders.length === 0) {
+		if (baseProviders.length === 0 && templateParam !== 'none') {
 			baseProviders = OAUTH_TEMPLATES['popular'];
 		}
 
@@ -201,3 +201,14 @@
 		</Button>
 	{/each}
 </div>
+
+{#if activeProviders.length > 0}
+	<div class="relative my-6">
+		<div class="absolute inset-0 flex items-center">
+			<div class="w-full border-t border-gray-200"></div>
+		</div>
+		<div class="relative flex justify-center text-sm">
+			<span class="px-4 bg-white text-gray-500">or</span>
+		</div>
+	</div>
+{/if}

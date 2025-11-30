@@ -15,6 +15,7 @@ export const OAUTH_TEMPLATES: Record<string, SocialProvider[]> = {
 	popular: ['google', 'github', 'discord', 'twitter'],
 	developer: ['github', 'gitlab', 'vercel'],
 	minimal: ['google', 'anonymous'],
+	none: [],
 	all: ALLOWED_SOCIAL_PROVIDERS.map((p) => p) as SocialProvider[]
 };
 
