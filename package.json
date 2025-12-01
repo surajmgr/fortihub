@@ -46,12 +46,12 @@
 		"@rollup/rollup-darwin-x64": "^4.53.3"
 	},
 	"dependencies": {
-		"@better-auth/expo": "^1.4.3",
-		"@better-auth/passkey": "^1.4.3",
+		"@better-auth/expo": "^1.4.4",
+		"@better-auth/passkey": "^1.4.4",
 		"@lucide/svelte": "^0.554.0",
 		"@types/nodemailer": "^7.0.4",
 		"@types/pg": "^8.15.6",
-		"better-auth": "^1.4.3",
+		"better-auth": "^1.4.4",
 		"drizzle-kit": "^0.31.7",
 		"drizzle-orm": "^0.44.7",
 		"ioredis": "^5.8.2",
