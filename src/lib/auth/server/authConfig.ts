@@ -177,7 +177,7 @@ export const authConfig: BetterAuthOptions = {
         if (ttl) await redis().set(key, value, 'EX', ttl);
         else await redis().set(key, value);
       },
-      delete: async (key) => await redis().del(key)
+      delete: async (key) => { await redis().del(key) }
     },
   } : {}),
   databaseHooks: {

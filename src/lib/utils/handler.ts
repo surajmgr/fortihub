@@ -1,6 +1,7 @@
 import { standardResponseSchema, type CursorPaginationSchema } from '$lib/schema/pagination';
 import z, { ZodType } from 'zod';
 import { PUBLIC_AUTH_URL } from './publicConstants';
+import { getErrorMessage } from './error';
 
 export function asyncHandlerClient<TArgs extends readonly unknown[], TResult>(
     fn: (...args: TArgs) => Promise<TResult>,
@@ -97,7 +98,10 @@ export function createApiHandler<
             body: method !== 'GET' ? JSON.stringify(input ?? {}) : undefined
         });
 
-        if (!res.ok) throw new Error(`HTTP ${res.status} – ${res.statusText}`);
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(getErrorMessage(error, "Something went wrong"));
+        }
 
         const json = await res.json();
         let validatedData: Output;

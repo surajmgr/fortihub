@@ -32,7 +32,7 @@ if (!BETTER_AUTH_SECRET) {
 	console.error("BETTER_AUTH_SECRET is required");
 }
 
-export const TRUSTED_ORIGINS = (NODE_ENV === "development" ? "*" : env.TRUSTED_ORIGINS || "*").split(",");
+export const TRUSTED_ORIGINS = (env.TRUSTED_ORIGINS || "*").split(",");
 export const PASSKEY_ORIGIN = (env.PASSKEY_ORIGIN || "*").split(",");
 if (!PASSKEY_ORIGIN.length) {
 	console.error("PASSKEY_ORIGIN is required");

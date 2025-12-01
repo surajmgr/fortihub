@@ -4,8 +4,6 @@ import { apiAsyncHandler } from "$lib/utils/server/handler";
 import { checkHasPasswordSchema, type CheckHasPasswordSchema } from "$lib/schema/server/auth";
 import { json } from "@sveltejs/kit";
 
-export const OPTIONS = apiAsyncHandler(async () => { return json({ success: true }); }, "api: checkHasPassword");
-
 export const GET = apiAsyncHandler(async ({ url }) => {
 	const emailSP = url.searchParams.get("email");
 	const [validatedError, validatedFields] = validateRequestBody(checkHasPasswordSchema, { email: emailSP });
