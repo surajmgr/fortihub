@@ -106,15 +106,23 @@ export const handle: Handle = sequence(
     // ----------------------------------
     if (isApi) {
       const duration = Date.now() - start;
-      Sentry.logger.error(
-        `FH [${event.request.method}] ${url} ${response.status} ${duration}ms`,
-        {
-          duration,
-          status: response.status,
-          url,
-          service: "FH"
-        }
-      );
+      const log = {
+        duration,
+        status: response.status,
+        url,
+        service: "FH"
+      }
+
+      if (response.status >= 400)
+        Sentry.logger.error(
+          `FH [${event.request.method}] ${url} ${response.status} ${duration}ms`,
+          log
+        );
+      else
+        Sentry.logger.info(
+          `FH [${event.request.method}] ${url} ${response.status} ${duration}ms`,
+          log
+        );
     }
     return response;
   }
