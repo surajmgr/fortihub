@@ -12,10 +12,10 @@
 			<section>
 				<h2 class="text-xl font-semibold text-gray-800 mb-3">1. Introduction</h2>
 				<p>
-					Welcome to {PUBLIC_APP_NAME || 'our application'}. We respect your privacy and are
-					committed to protecting your personal data. This privacy policy will inform you as to how
-					we look after your personal data when you visit our website and tell you about your
-					privacy rights and how the law protects you.
+					Welcome to {PUBLIC_APP_NAME}. We respect your privacy and are committed to protecting your
+					personal data. This privacy policy will inform you as to how we look after your personal
+					data when you visit our website and tell you about your privacy rights and how the law
+					protects you.
 				</p>
 			</section>
 

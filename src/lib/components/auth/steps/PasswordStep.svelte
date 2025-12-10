@@ -45,8 +45,7 @@
 				await signUpWithPassword({
 					email,
 					password,
-					callbackUrl,
-					marketingOptIn: true
+					callbackUrl
 				});
 			} else {
 				await signInWithPassword({

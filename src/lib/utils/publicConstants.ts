@@ -1,4 +1,5 @@
 import { env as pubEnv } from '$env/dynamic/public';
+export const PUBLIC_APP_NAME = pubEnv.PUBLIC_APP_NAME || 'Auth';
 export const PUBLIC_AUTH_URL = pubEnv.PUBLIC_AUTH_URL || null;
 if (!PUBLIC_AUTH_URL) {
 	console.error('PUBLIC_AUTH_URL is required');

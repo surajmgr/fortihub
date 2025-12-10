@@ -12,9 +12,9 @@
 			<section>
 				<h2 class="text-xl font-semibold text-gray-800 mb-3">1. Agreement to Terms</h2>
 				<p>
-					By accessing or using {PUBLIC_APP_NAME || 'our application'}, you agree to be bound by
-					these Terms of Service and our Privacy Policy. If you disagree with any part of the terms,
-					then you may not access the service.
+					By accessing or using {PUBLIC_APP_NAME}, you agree to be bound by these Terms of Service
+					and our Privacy Policy. If you disagree with any part of the terms, then you may not
+					access the service.
 				</p>
 			</section>
 
@@ -45,8 +45,8 @@
 				<h2 class="text-xl font-semibold text-gray-800 mb-3">4. Intellectual Property</h2>
 				<p>
 					The Service and its original content, features and functionality are and will remain the
-					exclusive property of {PUBLIC_APP_NAME || 'Likha'} and its licensors. The Service is protected
-					by copyright, trademark, and other laws.
+					exclusive property of {PUBLIC_APP_NAME} and its licensors. The Service is protected by copyright,
+					trademark, and other laws.
 				</p>
 			</section>
 
@@ -62,11 +62,11 @@
 			<section>
 				<h2 class="text-xl font-semibold text-gray-800 mb-3">6. Limitation of Liability</h2>
 				<p>
-					In no event shall {PUBLIC_APP_NAME || 'Likha'}, nor its directors, employees, partners,
-					agents, suppliers, or affiliates, be liable for any indirect, incidental, special,
-					consequential or punitive damages, including without limitation, loss of profits, data,
-					use, goodwill, or other intangible losses, resulting from your access to or use of or
-					inability to access or use the Service.
+					In no event shall {PUBLIC_APP_NAME}, nor its directors, employees, partners, agents,
+					suppliers, or affiliates, be liable for any indirect, incidental, special, consequential
+					or punitive damages, including without limitation, loss of profits, data, use, goodwill,
+					or other intangible losses, resulting from your access to or use of or inability to access
+					or use the Service.
 				</p>
 			</section>
 
