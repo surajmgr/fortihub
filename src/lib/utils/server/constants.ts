@@ -1,46 +1,63 @@
 import { env } from '$env/dynamic/private';
-import { DISCORD_CLIENT_ID, GITHUB_CLIENT_ID, GOOGLE_CLIENT_ID, LINKEDIN_CLIENT_ID, MICROSOFT_CLIENT_ID, FACEBOOK_CLIENT_ID, GITLAB_CLIENT_ID, HUGGINGFACE_CLIENT_ID, NOTION_CLIENT_ID, REDDIT_CLIENT_ID, SLACK_CLIENT_ID, SPOTIFY_CLIENT_ID, TWITTER_CLIENT_ID, TWITCH_CLIENT_ID, VERCEL_CLIENT_ID } from '../publicConstants';
+import {
+	DISCORD_CLIENT_ID,
+	GITHUB_CLIENT_ID,
+	GOOGLE_CLIENT_ID,
+	LINKEDIN_CLIENT_ID,
+	MICROSOFT_CLIENT_ID,
+	FACEBOOK_CLIENT_ID,
+	GITLAB_CLIENT_ID,
+	HUGGINGFACE_CLIENT_ID,
+	NOTION_CLIENT_ID,
+	REDDIT_CLIENT_ID,
+	SLACK_CLIENT_ID,
+	SPOTIFY_CLIENT_ID,
+	TWITTER_CLIENT_ID,
+	TWITCH_CLIENT_ID,
+	VERCEL_CLIENT_ID
+} from '../publicConstants';
 
-export const NODE_ENV = env.NODE_ENV || "development";
+export const NODE_ENV = env.NODE_ENV || 'development';
 
-export const EMAIL_SENDER_PROVIDER = env.EMAIL_SENDER_PROVIDER === "resend" ? "resend" : "nodemailer";
+export const EMAIL_SENDER_PROVIDER =
+	env.EMAIL_SENDER_PROVIDER === 'resend' ? 'resend' : 'nodemailer';
 export const RESEND_API_KEY = env.RESEND_API_KEY || null;
 export const EMAIL_FROM = env.EMAIL_FROM || null;
 export const EMAIL_FROM_NAME = env.EMAIL_FROM_NAME || null;
 export const SMTP_USER = env.SMTP_USER || null;
 export const SMTP_HOST = env.SMTP_HOST || null;
-export const SMTP_PORT = env.SMTP_PORT || "587";
-export const SMTP_SECURE = env.SMTP_SECURE || "true";
+export const SMTP_PORT = env.SMTP_PORT || '587';
+export const SMTP_SECURE = env.SMTP_SECURE || 'true';
 export const SMTP_PASS = env.SMTP_PASS || null;
-if (EMAIL_SENDER_PROVIDER === "resend" && !RESEND_API_KEY) {
-	console.error("RESEND_API_KEY is required");
+if (EMAIL_SENDER_PROVIDER === 'resend' && !RESEND_API_KEY) {
+	console.error('RESEND_API_KEY is required');
 }
 if (!EMAIL_FROM || !EMAIL_FROM_NAME) {
-	console.error("EMAIL_FROM and EMAIL_FROM_NAME are required");
+	console.error('EMAIL_FROM and EMAIL_FROM_NAME are required');
 }
-if (EMAIL_SENDER_PROVIDER !== "resend" && (!SMTP_HOST || !SMTP_PASS || !SMTP_USER)) {
-	console.error("SMTP_HOST and SMTP_PASS and SMTP_USER are required");
+if (EMAIL_SENDER_PROVIDER !== 'resend' && (!SMTP_HOST || !SMTP_PASS || !SMTP_USER)) {
+	console.error('SMTP_HOST and SMTP_PASS and SMTP_USER are required');
 }
 
 export const DATABASE_URL = env.DATABASE_URL || null;
 if (!DATABASE_URL) {
-	console.error("DATABASE_URL is required");
+	console.error('DATABASE_URL is required');
 }
 
-export const BETTER_AUTH_SECRET = env.BETTER_AUTH_SECRET || "";
+export const BETTER_AUTH_SECRET = env.BETTER_AUTH_SECRET || '';
 if (!BETTER_AUTH_SECRET) {
-	console.error("BETTER_AUTH_SECRET is required");
+	console.error('BETTER_AUTH_SECRET is required');
 }
 
-export const TRUSTED_ORIGINS = (env.TRUSTED_ORIGINS || "*").split(",");
-export const PASSKEY_ORIGIN = (env.PASSKEY_ORIGIN || "*").split(",");
+export const TRUSTED_ORIGINS = (env.TRUSTED_ORIGINS || '*').split(',');
+export const PASSKEY_ORIGIN = (env.PASSKEY_ORIGIN || '*').split(',');
 if (!PASSKEY_ORIGIN.length) {
-	console.error("PASSKEY_ORIGIN is required");
+	console.error('PASSKEY_ORIGIN is required');
 }
-export const PASSKEY_RP_NAME = env.PASSKEY_RP_NAME || "PasskeyRPName";
+export const PASSKEY_RP_NAME = env.PASSKEY_RP_NAME || 'PasskeyRPName';
 export const CLOUDFLARE_TURNSTILE_SECRET_KEY = env.CLOUDFLARE_TURNSTILE_SECRET_KEY || null;
 if (!CLOUDFLARE_TURNSTILE_SECRET_KEY) {
-	console.error("CLOUDFLARE_TURNSTILE_SECRET_KEY is required");
+	console.error('CLOUDFLARE_TURNSTILE_SECRET_KEY is required');
 }
 
 export const REDIS_URL = env.REDIS_URL || null;
@@ -48,89 +65,91 @@ export const REDIS_URL = env.REDIS_URL || null;
 export const GITHUB_CLIENT_SECRET = env.GITHUB_CLIENT_SECRET || null;
 export const ENABLE_GITHUB = GITHUB_CLIENT_ID && GITHUB_CLIENT_SECRET;
 if (GITHUB_CLIENT_ID && !GITHUB_CLIENT_SECRET) {
-	console.warn("For github OAUTH, GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are required");
+	console.warn('For github OAUTH, GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET are required');
 }
 
 export const GOOGLE_CLIENT_SECRET = env.GOOGLE_CLIENT_SECRET || null;
 export const ENABLE_GOOGLE = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_SECRET;
 if (GOOGLE_CLIENT_ID && !GOOGLE_CLIENT_SECRET) {
-	console.warn("For google OAUTH, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required");
+	console.warn('For google OAUTH, GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET are required');
 }
 
 export const DISCORD_CLIENT_SECRET = env.DISCORD_CLIENT_SECRET || null;
 export const ENABLE_DISCORD = DISCORD_CLIENT_ID && DISCORD_CLIENT_SECRET;
 if (DISCORD_CLIENT_ID && !DISCORD_CLIENT_SECRET) {
-	console.warn("For discord OAUTH, DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET are required");
+	console.warn('For discord OAUTH, DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET are required');
 }
 
 export const MICROSOFT_CLIENT_SECRET = env.MICROSOFT_CLIENT_SECRET || null;
 export const ENABLE_MICROSOFT = MICROSOFT_CLIENT_ID && MICROSOFT_CLIENT_SECRET;
 if (MICROSOFT_CLIENT_ID && !MICROSOFT_CLIENT_SECRET) {
-	console.warn("For microsoft OAUTH, MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET are required");
+	console.warn('For microsoft OAUTH, MICROSOFT_CLIENT_ID and MICROSOFT_CLIENT_SECRET are required');
 }
 
 export const LINKEDIN_CLIENT_SECRET = env.LINKEDIN_CLIENT_SECRET || null;
 export const ENABLE_LINKEDIN = LINKEDIN_CLIENT_ID && LINKEDIN_CLIENT_SECRET;
 if (LINKEDIN_CLIENT_ID && !LINKEDIN_CLIENT_SECRET) {
-	console.warn("For linkedin OAUTH, LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET are required");
+	console.warn('For linkedin OAUTH, LINKEDIN_CLIENT_ID and LINKEDIN_CLIENT_SECRET are required');
 }
 
 export const FACEBOOK_CLIENT_SECRET = env.FACEBOOK_CLIENT_SECRET || null;
 export const ENABLE_FACEBOOK = FACEBOOK_CLIENT_ID && FACEBOOK_CLIENT_SECRET;
 if (FACEBOOK_CLIENT_ID && !FACEBOOK_CLIENT_SECRET) {
-	console.warn("For facebook OAUTH, FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET are required");
+	console.warn('For facebook OAUTH, FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET are required');
 }
 
 export const GITLAB_CLIENT_SECRET = env.GITLAB_CLIENT_SECRET || null;
 export const ENABLE_GITLAB = GITLAB_CLIENT_ID && GITLAB_CLIENT_SECRET;
 if (GITLAB_CLIENT_ID && !GITLAB_CLIENT_SECRET) {
-	console.warn("For gitlab OAUTH, GITLAB_CLIENT_ID and GITLAB_CLIENT_SECRET are required");
+	console.warn('For gitlab OAUTH, GITLAB_CLIENT_ID and GITLAB_CLIENT_SECRET are required');
 }
 
 export const HUGGINGFACE_CLIENT_SECRET = env.HUGGINGFACE_CLIENT_SECRET || null;
 export const ENABLE_HUGGINGFACE = HUGGINGFACE_CLIENT_ID && HUGGINGFACE_CLIENT_SECRET;
 if (HUGGINGFACE_CLIENT_ID && !HUGGINGFACE_CLIENT_SECRET) {
-	console.warn("For huggingface OAUTH, HUGGINGFACE_CLIENT_ID and HUGGINGFACE_CLIENT_SECRET are required");
+	console.warn(
+		'For huggingface OAUTH, HUGGINGFACE_CLIENT_ID and HUGGINGFACE_CLIENT_SECRET are required'
+	);
 }
 
 export const NOTION_CLIENT_SECRET = env.NOTION_CLIENT_SECRET || null;
 export const ENABLE_NOTION = NOTION_CLIENT_ID && NOTION_CLIENT_SECRET;
 if (NOTION_CLIENT_ID && !NOTION_CLIENT_SECRET) {
-	console.warn("For notion OAUTH, NOTION_CLIENT_ID and NOTION_CLIENT_SECRET are required");
+	console.warn('For notion OAUTH, NOTION_CLIENT_ID and NOTION_CLIENT_SECRET are required');
 }
 
 export const REDDIT_CLIENT_SECRET = env.REDDIT_CLIENT_SECRET || null;
 export const ENABLE_REDDIT = REDDIT_CLIENT_ID && REDDIT_CLIENT_SECRET;
 if (REDDIT_CLIENT_ID && !REDDIT_CLIENT_SECRET) {
-	console.warn("For reddit OAUTH, REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are required");
+	console.warn('For reddit OAUTH, REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET are required');
 }
 
 export const SLACK_CLIENT_SECRET = env.SLACK_CLIENT_SECRET || null;
 export const ENABLE_SLACK = SLACK_CLIENT_ID && SLACK_CLIENT_SECRET;
 if (SLACK_CLIENT_ID && !SLACK_CLIENT_SECRET) {
-	console.warn("For slack OAUTH, SLACK_CLIENT_ID and SLACK_CLIENT_SECRET are required");
+	console.warn('For slack OAUTH, SLACK_CLIENT_ID and SLACK_CLIENT_SECRET are required');
 }
 
 export const SPOTIFY_CLIENT_SECRET = env.SPOTIFY_CLIENT_SECRET || null;
 export const ENABLE_SPOTIFY = SPOTIFY_CLIENT_ID && SPOTIFY_CLIENT_SECRET;
 if (SPOTIFY_CLIENT_ID && !SPOTIFY_CLIENT_SECRET) {
-	console.warn("For spotify OAUTH, SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET are required");
+	console.warn('For spotify OAUTH, SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET are required');
 }
 
 export const TWITTER_CLIENT_SECRET = env.TWITTER_CLIENT_SECRET || null;
 export const ENABLE_TWITTER = TWITTER_CLIENT_ID && TWITTER_CLIENT_SECRET;
 if (TWITTER_CLIENT_ID && !TWITTER_CLIENT_SECRET) {
-	console.warn("For twitter OAUTH, TWITTER_CLIENT_ID and TWITTER_CLIENT_SECRET are required");
+	console.warn('For twitter OAUTH, TWITTER_CLIENT_ID and TWITTER_CLIENT_SECRET are required');
 }
 
 export const TWITCH_CLIENT_SECRET = env.TWITCH_CLIENT_SECRET || null;
 export const ENABLE_TWITCH = TWITCH_CLIENT_ID && TWITCH_CLIENT_SECRET;
 if (TWITCH_CLIENT_ID && !TWITCH_CLIENT_SECRET) {
-	console.warn("For twitch OAUTH, TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET are required");
+	console.warn('For twitch OAUTH, TWITCH_CLIENT_ID and TWITCH_CLIENT_SECRET are required');
 }
 
 export const VERCEL_CLIENT_SECRET = env.VERCEL_CLIENT_SECRET || null;
 export const ENABLE_VERCEL = VERCEL_CLIENT_ID && VERCEL_CLIENT_SECRET;
 if (VERCEL_CLIENT_ID && !VERCEL_CLIENT_SECRET) {
-	console.warn("For vercel OAUTH, VERCEL_CLIENT_ID and VERCEL_CLIENT_SECRET are required");
+	console.warn('For vercel OAUTH, VERCEL_CLIENT_ID and VERCEL_CLIENT_SECRET are required');
 }

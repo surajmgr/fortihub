@@ -1,4 +1,4 @@
-import type { OTPEmailType } from "$lib/types/email";
+import type { OTPEmailType } from '$lib/types/email';
 
 interface EmailOTPTemplateProps {
 	otp: string;
@@ -88,13 +88,13 @@ export function generateEmailOTPTemplate({ otp, type, title }: EmailOTPTemplateP
 // Helper functions
 function getPreviewText(type: OTPEmailType, otp: string): string {
 	switch (type) {
-		case "sign-in":
+		case 'sign-in':
 			return `Your sign-in code is ${otp}`;
-		case "email-verification":
+		case 'email-verification':
 			return `Your verification code is ${otp}`;
-		case "forget-password":
+		case 'forget-password':
 			return `Your password reset code is ${otp}`;
-		case "magic-link":
+		case 'magic-link':
 			return `Your magic link is ${otp}`;
 		default:
 			return `Your verification code is ${otp}`;
@@ -103,15 +103,15 @@ function getPreviewText(type: OTPEmailType, otp: string): string {
 
 function getDescription(type: OTPEmailType): string {
 	switch (type) {
-		case "sign-in":
-			return "Use the following code to sign in to your account:";
-		case "email-verification":
-			return "Use the following code to verify your email address:";
-		case "forget-password":
-			return "Use the following code to reset your password:";
-		case "magic-link":
-			return "Use the following link to sign in to your account:";
+		case 'sign-in':
+			return 'Use the following code to sign in to your account:';
+		case 'email-verification':
+			return 'Use the following code to verify your email address:';
+		case 'forget-password':
+			return 'Use the following code to reset your password:';
+		case 'magic-link':
+			return 'Use the following link to sign in to your account:';
 		default:
-			return "Use the following verification code:";
+			return 'Use the following verification code:';
 	}
 }

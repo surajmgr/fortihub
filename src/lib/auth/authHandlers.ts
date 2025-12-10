@@ -4,7 +4,9 @@ import {
 	authSessionResponseSchema,
 	checkHasPasswordResponseSchema,
 	checkHasPasswordSchema,
-	setPasswordSchema
+	setPasswordSchema,
+	updateConsentSchema,
+	updateConsentResponseSchema
 } from '$lib/schema/auth';
 import { apiEndpoints } from '$lib/utils/apiEndpoints';
 import { getAuthCallbackURL, handleAuthRedirect } from '$lib/utils/utils';
@@ -36,8 +38,14 @@ export const signInWithPassword = asyncHandlerClient(
 
 // Sign up with email and password
 export const signUpWithPassword = asyncHandlerClient(
-	async (args: { email: string; password: string; name?: string; callbackUrl?: string }) => {
-		const { email, password, name, callbackUrl = '/' } = args;
+	async (args: {
+		email: string;
+		password: string;
+		name?: string;
+		callbackUrl?: string;
+		marketingOptIn?: boolean;
+	}) => {
+		const { email, password, name, callbackUrl = '/', marketingOptIn } = args;
 		const { data, error } = await authClient.signUp.email({
 			email,
 			password,
@@ -46,6 +54,19 @@ export const signUpWithPassword = asyncHandlerClient(
 
 		if (error) {
 			throw error;
+		}
+
+		if (data && marketingOptIn) {
+			try {
+				await updateConsent({
+					input: {
+						key: 'marketing_opt_in',
+						value: 'true'
+					}
+				});
+			} catch (e) {
+				console.error('Failed to save marketing consent', e);
+			}
 		}
 
 		if (data) {
@@ -223,42 +244,45 @@ export const resetPassword = asyncHandlerClient(
 );
 
 // Handle Magic Link Sign In
-export const handleMagicLinkSignIn = asyncHandlerClient(async (args: { email: string; callbackUrl?: string }) => {
-	const { email, callbackUrl = '/' } = args;
-	const { data, error } = await authClient.signIn.magicLink({
-		email,
-		callbackURL: getAuthCallbackURL(callbackUrl)
-	});
+export const handleMagicLinkSignIn = asyncHandlerClient(
+	async (args: { email: string; callbackUrl?: string }) => {
+		const { email, callbackUrl = '/' } = args;
+		const { data, error } = await authClient.signIn.magicLink({
+			email,
+			callbackURL: getAuthCallbackURL(callbackUrl)
+		});
 
-	if (error) {
-		throw error;
-	}
+		if (error) {
+			throw error;
+		}
 
-	return data;
-}, 'handleMagicLinkSignIn');
+		return data;
+	},
+	'handleMagicLinkSignIn'
+);
 
-export const handleSocialSignIn = asyncHandlerClient(async (args: { provider: SocialProvider; callbackUrl?: string }) => {
-	const { provider, callbackUrl = '/' } = args;
+export const handleSocialSignIn = asyncHandlerClient(
+	async (args: { provider: SocialProvider; callbackUrl?: string }) => {
+		const { provider, callbackUrl = '/' } = args;
 
-	if (!ALLOWED_SOCIAL_PROVIDERS.includes(provider)) {
-		throw new Error('Invalid provider');
-	}
+		if (!ALLOWED_SOCIAL_PROVIDERS.includes(provider)) {
+			throw new Error('Invalid provider');
+		}
 
-	if (provider === "passkey")
-		return handlePassKeySignIn({ callbackUrl });
-	else if (provider === "anonymous")
-		return handleAnonymousSignIn({ callbackUrl });
+		if (provider === 'passkey') return handlePassKeySignIn({ callbackUrl });
+		else if (provider === 'anonymous') return handleAnonymousSignIn({ callbackUrl });
 
-	const { data, error } = await authClient.signIn.social({
-		provider,
-		callbackURL: getAuthCallbackURL(callbackUrl)
-	});
+		const { data, error } = await authClient.signIn.social({
+			provider,
+			callbackURL: getAuthCallbackURL(callbackUrl)
+		});
 
-	if (error) throw error;
+		if (error) throw error;
 
-	return data;
-}, 'handleSocialSignIn');
-
+		return data;
+	},
+	'handleSocialSignIn'
+);
 
 // Passkey Sign In
 export const handlePassKeySignIn = asyncHandlerClient(async (args: { callbackUrl?: string }) => {
@@ -312,5 +336,13 @@ export const setPassword = createApiHandler({
 	method: 'POST',
 	path: apiEndpoints.auth.setPassword(),
 	input: setPasswordSchema,
+	auth: true
+});
+
+export const updateConsent = createApiHandler({
+	method: 'POST',
+	path: apiEndpoints.auth.updateConsent(),
+	input: updateConsentSchema,
+	output: updateConsentResponseSchema,
 	auth: true
 });

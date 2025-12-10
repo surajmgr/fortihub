@@ -2,6 +2,7 @@
 	import Button from '$lib/components/ui/Button.svelte';
 	import { ArrowLeft } from '@lucide/svelte';
 	import PasswordInput from '$lib/components/auth/PasswordInput.svelte';
+	import Checkbox from '$lib/components/ui/Checkbox.svelte';
 	import { signInWithPassword, signUpWithPassword } from '$lib/auth/authHandlers';
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
@@ -21,6 +22,7 @@
 	let confirmPassword = $state('');
 	let isLoading = $state(false);
 	let error = $state('');
+	let marketingOptIn = $state(false);
 
 	async function handleSubmit(e: Event) {
 		e.preventDefault();
@@ -44,7 +46,8 @@
 				await signUpWithPassword({
 					email,
 					password,
-					callbackUrl
+					callbackUrl,
+					marketingOptIn
 				});
 			} else {
 				await signInWithPassword({
@@ -93,6 +96,15 @@
 			placeholder="Confirm your password"
 			disabled={isLoading}
 		/>
+
+		<div class="py-1">
+			<Checkbox
+				id="marketing-opt-in"
+				label="I agree to receive marketing emails and updates."
+				bind:checked={marketingOptIn}
+				disabled={isLoading}
+			/>
+		</div>
 	{/if}
 
 	<Button type="submit" class="w-full h-12 text-base font-medium" disabled={isLoading}>

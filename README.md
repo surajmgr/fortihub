@@ -4,21 +4,21 @@ A centralized authentication microservice built with SvelteKit, designed to hand
 
 ## Features
 
--   **Centralized Authentication**: Single sign-on (SSO) capabilities across your ecosystem.
--   **Multiple Auth Methods**:
-    -   Email & Password
-    -   Email OTP
-    -   Google OAuth
-    -   Passkeys
-    -   Anonymous Sign-in
--   **Security**:
-    -   Cloudflare Turnstile integration for bot protection.
-    -   Secure session management with HTTP-only cookies.
-    -   Cross-domain token handling.
--   **User Management**:
-    -   Sign up / Sign in
-    -   Forgot / Reset Password flows
-    -   Email Verification
+- **Centralized Authentication**: Single sign-on (SSO) capabilities across your ecosystem.
+- **Multiple Auth Methods**:
+  - Email & Password
+  - Email OTP
+  - Google OAuth
+  - Passkeys
+  - Anonymous Sign-in
+- **Security**:
+  - Cloudflare Turnstile integration for bot protection.
+  - Secure session management with HTTP-only cookies.
+  - Cross-domain token handling.
+- **User Management**:
+  - Sign up / Sign in
+  - Forgot / Reset Password flows
+  - Email Verification
 
 ## Project Structure
 
@@ -85,34 +85,36 @@ The service is designed to be redirected to from other applications. When a user
 ### Required Parameters
 
 #### `callbackUrl`
--   **Description**: The URL where the user should be redirected after a successful action (login, signup, password reset).
--   **Usage**: Pass as a query parameter to auth routes.
--   **Example**: `?callbackUrl=https://example.com/dashboard`
+
+- **Description**: The URL where the user should be redirected after a successful action (login, signup, password reset).
+- **Usage**: Pass as a query parameter to auth routes.
+- **Example**: `?callbackUrl=https://example.com/dashboard`
 
 #### `redirectTo`
--   **Description**: Similar to `callbackUrl`, specifically used in the "Request Password Reset" flow to indicate where the user should go after clicking the reset link in their email.
+
+- **Description**: Similar to `callbackUrl`, specifically used in the "Request Password Reset" flow to indicate where the user should go after clicking the reset link in their email.
 
 ### Key Routes
 
-| Route | Description | Params |
-| :--- | :--- | :--- |
-| `/` | Home page with documentation/guide. | None |
-| `/login` | Main authentication page (Sign In / Sign Up). | `callbackUrl` (optional, defaults to `/`) |
-| `/forgot-password` | Page to request a password reset link. | `callbackUrl` (optional) |
-| `/reset-password` | Page to set a new password. | `token` (required), `error` (optional) |
-| `/callback` | Handles post-auth redirection. | `redirectTo` (required) |
+| Route              | Description                                   | Params                                    |
+| :----------------- | :-------------------------------------------- | :---------------------------------------- |
+| `/`                | Home page with documentation/guide.           | None                                      |
+| `/login`           | Main authentication page (Sign In / Sign Up). | `callbackUrl` (optional, defaults to `/`) |
+| `/forgot-password` | Page to request a password reset link.        | `callbackUrl` (optional)                  |
+| `/reset-password`  | Page to set a new password.                   | `token` (required), `error` (optional)    |
+| `/callback`        | Handles post-auth redirection.                | `redirectTo` (required)                   |
 
 ## Development
 
--   **Linting**: `npm run lint`
--   **Formatting**: `npm run format`
--   **Type Checking**: `npm run check`
+- **Linting**: `npm run lint`
+- **Formatting**: `npm run format`
+- **Type Checking**: `npm run check`
 
 ## Tech Stack
 
--   **Framework**: SvelteKit
--   **Styling**: TailwindCSS
--   **Auth**: Better Auth
--   **Validation**: Zod
--   **Captcha**: Cloudflare Turnstile
--   **Icons**: Lucide Svelte
+- **Framework**: SvelteKit
+- **Styling**: TailwindCSS
+- **Auth**: Better Auth
+- **Validation**: Zod
+- **Captcha**: Cloudflare Turnstile
+- **Icons**: Lucide Svelte

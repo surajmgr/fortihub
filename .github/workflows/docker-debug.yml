@@ -2,14 +2,14 @@ name: Docker Debug Build
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: ['main', 'master']
   workflow_dispatch:
 
 jobs:
   docker-build:
     name: Build Docker Image
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4

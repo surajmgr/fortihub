@@ -23,7 +23,7 @@ export function isValidURL(url: string) {
 	try {
 		new URL(url);
 		return true;
-	} catch (e) {
+	} catch {
 		return false;
 	}
 }
@@ -31,7 +31,7 @@ export function isValidURL(url: string) {
 export function getHostURL(url: string) {
 	try {
 		return parse(url).domain;
-	} catch (e) {
+	} catch {
 		return 'Invalid URL';
 	}
 }

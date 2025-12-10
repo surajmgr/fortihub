@@ -10,6 +10,7 @@
 		class?: string;
 		autocomplete?: FullAutoFill | null;
 		inputmode?: 'none' | 'text' | 'tel' | 'url' | 'email' | 'numeric' | 'decimal' | 'search';
+		minlength?: number;
 		maxlength?: number;
 		variant?: 'default' | 'outline' | 'ghost';
 		required?: boolean;
@@ -26,6 +27,7 @@
 		class: className = '',
 		autocomplete = 'off',
 		inputmode,
+		minlength,
 		maxlength,
 		variant = 'default',
 		required = false,
@@ -54,6 +56,7 @@
 	class={classes}
 	autocomplete={autocomplete || undefined}
 	{inputmode}
+	{minlength}
 	{maxlength}
 	{required}
 	oninput={onchange}

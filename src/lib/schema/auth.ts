@@ -88,3 +88,12 @@ export type EmailFormData = z.infer<typeof emailSchema>;
 export type PasswordFormData = z.infer<typeof passwordSchema>;
 export type SignUpPasswordFormData = z.infer<typeof signUpPasswordSchema>;
 export type OTPFormData = z.infer<typeof otpSchema>;
+
+export const updateConsentSchema = z.object({
+	key: z.string(),
+	value: z.string()
+});
+export const updateConsentResponseSchema = z.object({
+	success: z.boolean(),
+	message: z.string()
+});

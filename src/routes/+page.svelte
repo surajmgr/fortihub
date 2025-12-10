@@ -1,10 +1,10 @@
 <script lang="ts">
 	import OAuthProviders from '$lib/components/auth/OAuthProviders.svelte';
-	import { Check, Link, Settings, ExternalLink, Edit2, X } from '@lucide/svelte';
-	import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
+	import { Check, Settings, ExternalLink, Edit2 } from '@lucide/svelte';
+	import { ALLOWED_SOCIAL_PROVIDERS } from '$lib/utils/publicConstants';
 	import { page } from '$app/stores';
-	import { goto } from '$app/navigation';
 	import { untrack } from 'svelte';
+	import { SvelteURLSearchParams } from 'svelte/reactivity';
 
 	// Initialize state from URL
 	let urlParams = $derived($page.url.searchParams);
@@ -49,7 +49,7 @@
 	}
 
 	function getLoginUrl() {
-		const params = new URLSearchParams();
+		const params = $state(new SvelteURLSearchParams());
 		if (selectedTemplate !== 'popular') params.set('template', selectedTemplate);
 		if (selectedIncludes.length > 0) params.set('include', selectedIncludes.join(','));
 		if (demoCallbackUrl) params.set('callbackUrl', demoCallbackUrl);

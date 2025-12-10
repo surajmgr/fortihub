@@ -1,12 +1,14 @@
-import { validateRequestBody } from "$lib/utils/server/validateRequestBody";
-import { checkHasPassword } from "$lib/data-access/auth";
-import { apiAsyncHandler } from "$lib/utils/server/handler";
-import { checkHasPasswordSchema, type CheckHasPasswordSchema } from "$lib/schema/server/auth";
-import { json } from "@sveltejs/kit";
+import { validateRequestBody } from '$lib/utils/server/validateRequestBody';
+import { checkHasPassword } from '$lib/data-access/auth';
+import { apiAsyncHandler } from '$lib/utils/server/handler';
+import { checkHasPasswordSchema, type CheckHasPasswordSchema } from '$lib/schema/server/auth';
+import { json } from '@sveltejs/kit';
 
 export const GET = apiAsyncHandler(async ({ url }) => {
-	const emailSP = url.searchParams.get("email");
-	const [validatedError, validatedFields] = validateRequestBody(checkHasPasswordSchema, { email: emailSP });
+	const emailSP = url.searchParams.get('email');
+	const [validatedError, validatedFields] = validateRequestBody(checkHasPasswordSchema, {
+		email: emailSP
+	});
 	if (validatedError) return json(validatedError, { status: 400 });
 
 	const { email } = validatedFields as CheckHasPasswordSchema;
@@ -14,10 +16,10 @@ export const GET = apiAsyncHandler(async ({ url }) => {
 
 	return json({
 		success: true,
-		message: "Password checked successfully",
-		data: hasPassword,
+		message: 'Password checked successfully',
+		data: hasPassword
 	});
-}, "api: checkHasPassword");
+}, 'api: checkHasPassword');
 
 export const POST = apiAsyncHandler(async ({ request }) => {
 	const body = (await request.json()) as CheckHasPasswordSchema;
@@ -29,7 +31,7 @@ export const POST = apiAsyncHandler(async ({ request }) => {
 
 	return json({
 		success: true,
-		message: "Password checked successfully",
-		data: hasPassword,
+		message: 'Password checked successfully',
+		data: hasPassword
 	});
-}, "api: checkHasPassword");
+}, 'api: checkHasPassword');

@@ -1,4 +1,4 @@
-import type { HttpCode } from "./server/apiError";
+import type { HttpCode } from './server/apiError';
 
 export function getErrorMessage(error: unknown, defaultMessage = 'Something went wrong'): string {
 	if (error instanceof Error && typeof error.message === 'string') {

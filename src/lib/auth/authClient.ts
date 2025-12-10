@@ -21,7 +21,7 @@ export const authClient = createAuthClient({
 		anonymousClient(),
 		magicLinkClient(),
 		oneTapClient({
-			clientId: GOOGLE_CLIENT_ID || ""
+			clientId: GOOGLE_CLIENT_ID || ''
 		}),
 		emailOTPClient()
 	]

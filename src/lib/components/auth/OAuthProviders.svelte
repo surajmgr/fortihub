@@ -22,6 +22,7 @@
 		OAUTH_TEMPLATES,
 		ENABLE_ANONYMOUS
 	} from '$lib/utils/publicConstants';
+	import { SvelteSet } from 'svelte/reactivity';
 	import SocialIcons from '../ui/SocialIcons.svelte';
 
 	interface Props {
@@ -150,7 +151,7 @@
 		}
 
 		// Start with base template
-		let active = new Set(baseProviders);
+		let active = new SvelteSet(baseProviders);
 
 		// Add inclusions
 		inclusionParam.forEach((p) => {
