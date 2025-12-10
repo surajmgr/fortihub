@@ -7,6 +7,7 @@
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
 	import { ALLOWED_SOCIAL_PROVIDERS, type SocialProvider } from '$lib/utils/publicConstants';
+	import LegalNotice from '../LegalNotice.svelte';
 
 	interface Props {
 		callbackUrl: string;
@@ -88,6 +89,8 @@
 			/>
 		</div>
 	</div>
+
+	<LegalNotice />
 
 	<Button type="submit" class="w-full" disabled={isLoading}>
 		{isLoading ? 'Please wait...' : 'Continue'}

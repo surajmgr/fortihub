@@ -5,18 +5,20 @@
 	import Input from '$lib/components/ui/Input.svelte';
 	import Toggle from '$lib/components/ui/Toggle.svelte';
 	import AlertMessage from '$lib/components/ui/AlertMessage.svelte';
+	import type { ConsentKeys, ConsentConfigItem } from '$lib/utils/server/defaults';
 
 	let { data } = $props();
-	let { user, consents } = data;
+	let { user, consents, consentConfig } = data;
 
 	let displayName = $state(user?.name || '');
-	let marketingOptIn = $state(
-		consents.find((c: { key: string; value: string }) => c.key === 'marketing_opt_in')?.value ===
-			'true'
-	);
+	// Create local state for consents to handle optimistic UI and binding
+	let localConsents = $state({ ...consents });
 
 	let isLoading = $state(false);
-	let message: { type: 'success' | 'error'; text: string } = $state({ type: 'success', text: '' });
+	let message: { type: 'success' | 'error'; text: string } = $state({
+		type: 'success',
+		text: ''
+	});
 
 	async function handleUpdateProfile() {
 		isLoading = true;
@@ -33,16 +35,21 @@
 		}
 	}
 
-	async function handleConsentChange(checked: boolean) {
+	async function handleConsentChange(key: string, value: string) {
+		// Update local state immediately
+		// @ts-ignore
+		localConsents[key] = value;
+
 		try {
 			await updateConsent({
 				input: {
-					key: 'marketing_opt_in',
-					value: String(checked)
+					key,
+					value
 				}
 			});
 		} catch (e) {
 			console.error(e);
+			// Ideally revert local state here on error
 		}
 	}
 </script>
@@ -78,14 +85,40 @@
 			</div>
 		</div>
 
-		<!-- Preferences Section -->
+		<!-- Dynamic Preferences Section -->
 		<div class="bg-white shadow rounded-lg p-6 border border-gray-100">
-			<h3 class="text-lg font-medium text-gray-900 mb-4">Email Preferences</h3>
-			<Toggle
-				label="Receive marketing emails and updates"
-				bind:checked={marketingOptIn}
-				onchange={handleConsentChange}
-			/>
+			<h3 class="text-lg font-medium text-gray-900 mb-4">Privacy & preferences</h3>
+
+			<div class="space-y-6">
+				{#each Object.entries(consentConfig) as [key, config]}
+					{#if config.type === 'boolean'}
+						<Toggle
+							label={config.label}
+							checked={localConsents[key as ConsentKeys] === 'true'}
+							onchange={(checked) => handleConsentChange(key as ConsentKeys, String(checked))}
+						/>
+					{:else if config.type === 'select' && config.options}
+						<div>
+							<label class="block text-sm font-medium text-gray-700 mb-1" for={key}>
+								{config.label}
+							</label>
+							<select
+								id={key}
+								value={localConsents[key as ConsentKeys]}
+								onchange={(e) => handleConsentChange(key as ConsentKeys, e.currentTarget.value)}
+								class="w-full px-3 py-2 rounded-md border border-gray-300 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 bg-white"
+							>
+								{#each config.options as option}
+									<option value={option.value}>{option.label}</option>
+								{/each}
+							</select>
+							{#if config.description}
+								<p class="mt-1 text-xs text-gray-500">{config.description}</p>
+							{/if}
+						</div>
+					{/if}
+				{/each}
+			</div>
 		</div>
 
 		<!-- Security Section -->

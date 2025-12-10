@@ -43,9 +43,8 @@ export const signUpWithPassword = asyncHandlerClient(
 		password: string;
 		name?: string;
 		callbackUrl?: string;
-		marketingOptIn?: boolean;
 	}) => {
-		const { email, password, name, callbackUrl = '/', marketingOptIn } = args;
+		const { email, password, name, callbackUrl = '/' } = args;
 		const { data, error } = await authClient.signUp.email({
 			email,
 			password,
@@ -54,19 +53,6 @@ export const signUpWithPassword = asyncHandlerClient(
 
 		if (error) {
 			throw error;
-		}
-
-		if (data && marketingOptIn) {
-			try {
-				await updateConsent({
-					input: {
-						key: 'marketing_opt_in',
-						value: 'true'
-					}
-				});
-			} catch (e) {
-				console.error('Failed to save marketing consent', e);
-			}
 		}
 
 		if (data) {
