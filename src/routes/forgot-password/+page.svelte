@@ -7,6 +7,7 @@
 	import Input from '$lib/components/ui/Input.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_APP_NAME } from '$lib/utils/publicConstants';
 
 	let email = $state('');
 	let isLoading = $state(false);
@@ -38,8 +39,8 @@
 </script>
 
 <svelte:head>
-	<title>Forgot Password - FortiHub</title>
-	<meta name="description" content="Reset your FortiHub account password." />
+	<title>Forgot Password - {PUBLIC_APP_NAME}</title>
+	<meta name="description" content="Reset your {PUBLIC_APP_NAME} account password." />
 </svelte:head>
 
 <div

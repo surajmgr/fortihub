@@ -1,7 +1,7 @@
 <script lang="ts">
 	import OAuthProviders from '$lib/components/auth/OAuthProviders.svelte';
 	import { Check, Settings, ExternalLink, Edit2 } from '@lucide/svelte';
-	import { ALLOWED_SOCIAL_PROVIDERS } from '$lib/utils/publicConstants';
+	import { ALLOWED_SOCIAL_PROVIDERS, PUBLIC_APP_NAME } from '$lib/utils/publicConstants';
 	import { page } from '$app/stores';
 	import { untrack } from 'svelte';
 	import { SvelteURLSearchParams } from 'svelte/reactivity';
@@ -57,14 +57,23 @@
 		return `/login?${params.toString()}`;
 	}
 
+	function splitAppName(name: string, index = 0) {
+		// Split by uppercase letters, space, and underscores
+		return name
+			.replace(/([A-Z])/g, ' $1')
+			.replace(/_/g, ' ')
+			.trim()
+			.split(' ')[index];
+	}
+
 	const displayProviders = ALLOWED_SOCIAL_PROVIDERS;
 </script>
 
 <svelte:head>
-	<title>FortiHub - Secure Authentication</title>
+	<title>{PUBLIC_APP_NAME} - Secure Authentication</title>
 	<meta
 		name="description"
-		content="FortiHub is a secure, customizable authentication microservice for your applications."
+		content={`${PUBLIC_APP_NAME} is a secure, customizable authentication microservice for your applications.`}
 	/>
 </svelte:head>
 <div class="min-h-screen bg-white font-sans text-gray-900 flex flex-col">
@@ -77,11 +86,13 @@
 				<Settings size={20} />
 			</div>
 			<h1 class="text-2xl font-bold tracking-tight text-gray-900">
-				Forti<span class="text-blue-600">Hub</span>
+				{splitAppName(PUBLIC_APP_NAME, 0)}<span class="text-blue-600"
+					>{splitAppName(PUBLIC_APP_NAME, 1)}</span
+				>
 			</h1>
 		</div>
 		<a
-			href="https://github.com/surajmgr/AuthMS"
+			href="https://surajpulami.com.np/fortihub/intro"
 			target="_blank"
 			class="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
 		>

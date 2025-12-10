@@ -6,6 +6,7 @@
 	import PasswordInput from '$lib/components/auth/PasswordInput.svelte';
 	import { getErrorMessage } from '$lib/utils/error';
 	import { goto } from '$app/navigation';
+	import { PUBLIC_APP_NAME } from '$lib/utils/publicConstants';
 
 	let newPassword = $state('');
 	let confirmPassword = $state('');
@@ -52,8 +53,8 @@
 </script>
 
 <svelte:head>
-	<title>Reset Password - FortiHub</title>
-	<meta name="description" content="Reset your FortiHub account password." />
+	<title>Reset Password - {PUBLIC_APP_NAME}</title>
+	<meta name="description" content="Reset your {PUBLIC_APP_NAME} account password." />
 </svelte:head>
 
 <div

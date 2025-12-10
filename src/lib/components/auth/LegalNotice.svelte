@@ -1,5 +1,7 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Checkbox from '$lib/components/ui/Checkbox.svelte';
+	import { getHostDomain } from '$lib/utils';
 	import toast from 'svelte-5-french-toast';
 
 	interface Props {
@@ -8,6 +10,8 @@
 
 	let { class: className = '' }: Props = $props();
 	let checked = $state(true);
+
+	const callbackUrl = $derived($page.url.searchParams.get('callbackUrl') || null);
 
 	function handleClick() {
 		checked = true;
@@ -28,6 +32,13 @@
 			class="text-blue-600 hover:underline"
 			target="_blank">Terms of Service</a
 		>
-		and <a href="/privacy" class="text-blue-600 hover:underline" target="_blank">Privacy Policy</a>.
+		and <a href="/privacy" class="text-blue-600 hover:underline" target="_blank">Privacy Policy</a>
+		{#if callbackUrl}
+			, as well as that of <a
+				href={callbackUrl}
+				class="text-blue-600 hover:underline"
+				target="_blank">{getHostDomain(callbackUrl)}</a
+			>
+		{/if}.
 	</div>
 </div>

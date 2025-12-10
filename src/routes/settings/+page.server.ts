@@ -9,7 +9,7 @@ export async function load({ request }: { request: Request }) {
 		headers: request.headers
 	});
 
-	if (!session?.user) throw redirect(302, '/login');
+	if (!session?.user) throw redirect(302, '/login?callbackUrl=' + encodeURIComponent(request.url));
 
 	const database = db();
 	if (!database) throw new ApiError('DB instance not found', 500);
